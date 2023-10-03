@@ -1,7 +1,6 @@
 package org.example.utils;
 
 import org.apache.commons.io.FileUtils;
-import org.example.exceptions.DirectoryNotFoundException;
 
 import java.io.File;
 import java.io.IOException;
