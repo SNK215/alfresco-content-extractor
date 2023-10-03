@@ -2,8 +2,7 @@ package org.example;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
-import org.example.exceptions.DirectoryNotFoundException;
-import org.example.utils.DirectoryCleaner;
+import org.example.utils.DirectoryManager;
 import org.example.utils.Extractor;
 import org.example.utils.JsonObjectCreator;
 import org.example.utils.SessionGenerator;
@@ -17,11 +16,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         SessionGenerator sessionGenerator = new SessionGenerator();
-        DirectoryCleaner directoryCleaner = new DirectoryCleaner();
+        DirectoryManager directoryManager = new DirectoryManager();
         JsonObjectCreator jsonObjectCreator = new JsonObjectCreator();
-        Extractor extractor = new Extractor(directoryCleaner, jsonObjectCreator, sessionGenerator);
+        Extractor extractor = new Extractor(directoryManager, jsonObjectCreator, sessionGenerator);
 
-        directoryCleaner.clean(extractor.getDestinationFolder());
+        directoryManager.clean(extractor.getDestinationFolder());
         File newDir = new File(extractor.getDestinationFolder() + extractor.getTargetPath());
         if (!newDir.exists()){
             newDir.mkdirs();

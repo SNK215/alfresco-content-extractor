@@ -6,13 +6,12 @@ import org.example.exceptions.DirectoryNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class DirectoryCleaner {
+public class DirectoryManager {
 
-    public DirectoryCleaner() {
+    public DirectoryManager() {
     }
 
     public void clean(String destinationFolder) throws IOException {

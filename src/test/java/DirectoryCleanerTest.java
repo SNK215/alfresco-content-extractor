@@ -1,5 +1,5 @@
 import org.example.exceptions.DirectoryNotFoundException;
-import org.example.utils.DirectoryCleaner;
+import org.example.utils.DirectoryManager;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +16,7 @@ public class DirectoryCleanerTest {
     private File folder;
     private File file;
     private String username;
-    private DirectoryCleaner directoryCleaner;
+    private DirectoryManager directoryManager;
 
     @BeforeEach
     public void setUp() throws IOException {
@@ -28,7 +28,7 @@ public class DirectoryCleanerTest {
         file = new File("C:\\Users\\"+username+"\\Desktop\\testFolder\\test.txt");
         file.createNewFile();
 
-        directoryCleaner = new DirectoryCleaner();
+        directoryManager = new DirectoryManager();
     }
 
     @Test
@@ -40,7 +40,7 @@ public class DirectoryCleanerTest {
         // in a given path. We can use the stream.findAny() method that returns an empty Optionalif the directoryis empty.
         boolean isEmptyDirectory = Files.list(dirPath).findAny().isPresent();
 
-        directoryCleaner.clean("C:\\Users\\"+username+"\\Desktop\\testFolder");
+        directoryManager.clean("C:\\Users\\"+username+"\\Desktop\\testFolder");
 
         Assert.assertTrue(isEmptyDirectory);
     }
@@ -49,7 +49,7 @@ public class DirectoryCleanerTest {
     public void givenIncorrectDirectory_whenClean_shouldThrowDirectoryNotFoundException() throws DirectoryNotFoundException, IOException {
 
         Assertions.assertThrows(DirectoryNotFoundException.class, ()->
-                directoryCleaner.clean("C:\\Users\\"+username+"\\Desktop\\incorrectFolder"));
+                directoryManager.clean("C:\\Users\\"+username+"\\Desktop\\incorrectFolder"));
     }
 
 

@@ -23,15 +23,15 @@ public class Extractor {
     private int countErrors = 0;
     String username = System.getProperty("user.name");
     private String destinationFolder = "C:\\Users\\"+username+"\\Documents\\extraction";
-    private DirectoryCleaner directoryCleaner;
+    private DirectoryManager directoryManager;
     private JsonObjectCreator jsonObjectCreator;
     private SessionGenerator sessionGenerator;
     private String tempPathError = "0";
     public Extractor() {
     }
 
-    public Extractor(DirectoryCleaner directoryCleaner, JsonObjectCreator jsonObjectCreator, SessionGenerator sessionGenerator) {
-        this.directoryCleaner = directoryCleaner;
+    public Extractor(DirectoryManager directoryManager, JsonObjectCreator jsonObjectCreator, SessionGenerator sessionGenerator) {
+        this.directoryManager = directoryManager;
         this.jsonObjectCreator = jsonObjectCreator;
         this.sessionGenerator = sessionGenerator;
     }
