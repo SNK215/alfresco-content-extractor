@@ -17,7 +17,6 @@ public class SessionGenerator {
     private String serviceUrl = "http://localhost:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser";
     private String user = "admin";
     private String password = "admin";
-
     private Session session = null;
 
     public SessionGenerator() {

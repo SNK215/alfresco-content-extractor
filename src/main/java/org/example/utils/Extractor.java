@@ -21,7 +21,8 @@ public class Extractor {
     private int countExtractedFiles = 0;
     private int countExtractedFolders = 0;
     private int countErrors = 0;
-    private String destinationFolder = "C:\\Users\\llangowski\\Documents\\TUTORIAL_HOME\\extractionTargetFolder\\extraction";
+    String username = System.getProperty("user.name");
+    private String destinationFolder = "C:\\Users\\"+username+"\\Documents\\extraction";
     private DirectoryCleaner directoryCleaner;
     private JsonObjectCreator jsonObjectCreator;
     private SessionGenerator sessionGenerator;
@@ -107,7 +108,6 @@ public class Extractor {
                 //Log de confirmation
                 if (newFile.exists()) {
                     System.out.println("\u001B[32m" + "File created : " + newFile.getPath() + "\u001B[0m");
-                    System.out.println(childDocument.getProperties());
                 }
             }
         }

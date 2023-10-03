@@ -14,7 +14,7 @@ import java.io.IOException;
 public class Main {
 
 
-    public static void main(String[] args) throws IOException, DirectoryNotFoundException {
+    public static void main(String[] args) throws IOException {
 
         SessionGenerator sessionGenerator = new SessionGenerator();
         DirectoryCleaner directoryCleaner = new DirectoryCleaner();

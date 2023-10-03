@@ -15,11 +15,16 @@ public class DirectoryCleaner {
     public DirectoryCleaner() {
     }
 
-    public void clean(String destinationFolder) throws IOException, DirectoryNotFoundException {
+    public void clean(String destinationFolder) throws IOException {
         Path dirPath = Paths.get(destinationFolder);
+
+        //Si le dossier de destination n'existe pas, alors on le crée
         if (!Files.exists(dirPath)) {
-             throw new DirectoryNotFoundException("Cannot find directory for clean operation at \n" + destinationFolder);
+             File newDestinationFolder = new File(destinationFolder);
+             newDestinationFolder.mkdir();
+             System.out.println("Destination folder created at \n" + destinationFolder);
         }
+
         File directory = new File(destinationFolder);
         FileUtils.cleanDirectory(directory);
     }
