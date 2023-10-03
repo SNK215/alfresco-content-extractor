@@ -22,11 +22,13 @@ public class DirectoryCleaner {
         if (!Files.exists(dirPath)) {
              File newDestinationFolder = new File(destinationFolder);
              newDestinationFolder.mkdir();
-             System.out.println("Destination folder created at \n" + destinationFolder);
+             System.out.println("\u001B[33m" + "Destination folder created at \n" + destinationFolder + "\u001B[0m");
+        } else {
+            File directory = new File(destinationFolder);
+            FileUtils.cleanDirectory(directory);
+            System.out.println("\u001B[33m" + "Destination folder cleaned at \n" + destinationFolder + "\u001B[0m");
         }
 
-        File directory = new File(destinationFolder);
-        FileUtils.cleanDirectory(directory);
     }
 
 
