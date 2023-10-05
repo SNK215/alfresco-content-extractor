@@ -111,7 +111,6 @@ public class Extractor {
                 //Log de confirmation
                 if (newFile.exists()) {
                     System.out.println("\u001B[32m" + "File created : " + newFile.getPath() + "\u001B[0m");
-                    System.out.println(childDocument.getAcl());
                 }
             }
         }

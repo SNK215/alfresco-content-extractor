@@ -27,7 +27,11 @@ public class Main {
         extractor.extractContent(folder);
 
         System.out.println("--- Extraction de " + extractor.getCountExtractedFiles() + " fichiers et " + extractor.getCountExtractedFolders() + " dossiers terminée ---");
-        System.out.println("--- " + extractor.getCountErrors() + " fichier ou dossier n'a pas pu être extrait ---");
-        
+
+        System.out.println(extractor.getCountErrors() == 0 ?
+                "--- Aucune erreur rencontrée ---" :
+                "--- " + extractor.getCountErrors() + " fichier ou dossier n'a pas pu être extrait ---"
+                );
+
     }
 }
