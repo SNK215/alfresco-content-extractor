@@ -14,9 +14,11 @@ public class DirectoryManager {
     }
 
     public void cleanOrMake(String destinationFolder) throws IOException {
+
         Path dirPath = Paths.get(destinationFolder);
 
         //Si le dossier de destination n'existe pas, alors on le crée
+        //Sinon on vide le contenu du dossier
         if (!Files.exists(dirPath)) {
              File newDestinationFolder = new File(destinationFolder);
              newDestinationFolder.mkdir();

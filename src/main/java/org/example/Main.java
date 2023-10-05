@@ -14,24 +14,17 @@ public class Main {
 
         SessionGenerator sessionGenerator = new SessionGenerator();
         DirectoryManager directoryManager = new DirectoryManager();
-        FileConverter fileConverter = new FileConverter();
-        Extractor extractor = new Extractor(directoryManager, fileConverter, sessionGenerator);
+        Extractor extractor = new Extractor();
 
         directoryManager.cleanOrMake(extractor.getDestinationFolder());
-        File newDir = new File(extractor.getDestinationFolder() + extractor.getTargetPath());
-        if (!newDir.exists()){
-            newDir.mkdirs();
-        }
 
         Session session = sessionGenerator.generate();
         Folder folder = (Folder) session.getObjectByPath(extractor.getTargetPath());
+
         extractor.extractContent(folder);
 
         System.out.println("--- Extraction de " + extractor.getCountExtractedFiles() + " fichiers et " + extractor.getCountExtractedFolders() + " dossiers terminée ---");
         System.out.println("--- " + extractor.getCountErrors() + " fichier ou dossier n'a pas pu être extrait ---");
-
-
-
 
     }
 }

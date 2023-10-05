@@ -15,6 +15,7 @@ import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 import java.util.GregorianCalendar;
 
+@SuppressWarnings({"unused"})
 public class Extractor {
 
     private String targetPath = "/";
@@ -23,18 +24,9 @@ public class Extractor {
     private int countErrors = 0;
     String username = System.getProperty("user.name");
     private String destinationFolder = "C:\\Users\\"+username+"\\Documents\\extraction";
-    private DirectoryManager directoryManager;
-    private FileConverter fileConverter;
-    private SessionGenerator sessionGenerator;
     private String tempPathError = "0";
 
     public Extractor() {
-    }
-
-    public Extractor(DirectoryManager directoryManager, FileConverter fileConverter, SessionGenerator sessionGenerator) {
-        this.directoryManager = directoryManager;
-        this.fileConverter = fileConverter;
-        this.sessionGenerator = sessionGenerator;
     }
 
     public void extractContent(Folder folder) throws IOException {
@@ -45,6 +37,7 @@ public class Extractor {
                 if (object instanceof Folder) {
                     //Objet CmisObject converti en object Folder
                     Folder childFolder = (Folder) object;
+
                     //Création du dossier
                     File newDir = new File(destinationFolder + "/" + childFolder.getPath());
                     countExtractedFolders++;
@@ -52,20 +45,24 @@ public class Extractor {
                         newDir.mkdirs();
                     }
                     tempPathError = newDir.getPath();
+
                     //Création d'un fichier JSON contenant les propriétés du fichier
                     FileWriter JsonFile = new FileWriter(newDir.getPath() + "_properties.json");
                     JsonFile.write(FileConverter.convertDataToJSONObject(object));
                     JsonFile.flush();
+
                     //Ajout des attributs
                     GregorianCalendar creationDate = object.getCreationDate();
                     long creationDateMs = creationDate.getTimeInMillis();
                     FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
                     Files.setAttribute(newDir.toPath(), "creationTime", creationDateFileTime);
                     newDir.setLastModified(object.getLastModificationDate().getTimeInMillis());
+
                     //Log de confirmation
                     if (newDir.exists()) {
                         System.out.println("\u001B[32m" + "Directory created : " + newDir.getPath() + "\u001B[0m");
                     }
+
                     //On extrait à nouveau les dossiers et fichiers enfants dans chaque dossier enfant
                     extractFiles(childFolder);
                     extractContent(childFolder);
@@ -88,24 +85,29 @@ public class Extractor {
             if (object instanceof Document) {
                 //Object CmisObject converti en object Document
                 Document childDocument = (Document) object;
+
                 //Création du fichier
                 File newFile = new File(destinationFolder + childDocument.getPaths().get(0));
                 countExtractedFiles++;
                 tempPathError = newFile.getPath();
+
                 //Création d'un fichier JSON contenant les propriétés du fichier
                 FileWriter JsonFile = new FileWriter(newFile.getPath() + "_properties.json");
                 JsonFile.write(FileConverter.convertDataToJSONObject(object));
                 JsonFile.flush();
+
                 //Insertion du contenu dans le fichier
                 ContentStream contentStream = childDocument.getContentStream();
                 InputStream inputStream = contentStream.getStream();
                 FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
+
                 //Ajout des attributs
                 GregorianCalendar creationDate = childDocument.getCreationDate();
                 long creationDateMs = creationDate.getTimeInMillis();
                 FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
                 Files.setAttribute(newFile.toPath(),"creationTime",creationDateFileTime);
                 newFile.setLastModified(childDocument.getLastModificationDate().getTimeInMillis());
+
                 //Log de confirmation
                 if (newFile.exists()) {
                     System.out.println("\u001B[32m" + "File created : " + newFile.getPath() + "\u001B[0m");
