@@ -13,7 +13,7 @@ public class DirectoryManager {
     public DirectoryManager() {
     }
 
-    public void clean(String destinationFolder) throws IOException {
+    public void cleanOrMake(String destinationFolder) throws IOException {
         Path dirPath = Paths.get(destinationFolder);
 
         //Si le dossier de destination n'existe pas, alors on le crée

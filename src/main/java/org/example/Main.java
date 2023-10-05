@@ -2,10 +2,7 @@ package org.example;
 
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
-import org.example.utils.DirectoryManager;
-import org.example.utils.Extractor;
-import org.example.utils.JsonObjectCreator;
-import org.example.utils.SessionGenerator;
+import org.example.utils.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,10 +14,10 @@ public class Main {
 
         SessionGenerator sessionGenerator = new SessionGenerator();
         DirectoryManager directoryManager = new DirectoryManager();
-        JsonObjectCreator jsonObjectCreator = new JsonObjectCreator();
-        Extractor extractor = new Extractor(directoryManager, jsonObjectCreator, sessionGenerator);
+        FileConverter fileConverter = new FileConverter();
+        Extractor extractor = new Extractor(directoryManager, fileConverter, sessionGenerator);
 
-        directoryManager.clean(extractor.getDestinationFolder());
+        directoryManager.cleanOrMake(extractor.getDestinationFolder());
         File newDir = new File(extractor.getDestinationFolder() + extractor.getTargetPath());
         if (!newDir.exists()){
             newDir.mkdirs();

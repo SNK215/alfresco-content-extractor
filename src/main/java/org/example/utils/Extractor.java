@@ -24,15 +24,16 @@ public class Extractor {
     String username = System.getProperty("user.name");
     private String destinationFolder = "C:\\Users\\"+username+"\\Documents\\extraction";
     private DirectoryManager directoryManager;
-    private JsonObjectCreator jsonObjectCreator;
+    private FileConverter fileConverter;
     private SessionGenerator sessionGenerator;
     private String tempPathError = "0";
+
     public Extractor() {
     }
 
-    public Extractor(DirectoryManager directoryManager, JsonObjectCreator jsonObjectCreator, SessionGenerator sessionGenerator) {
+    public Extractor(DirectoryManager directoryManager, FileConverter fileConverter, SessionGenerator sessionGenerator) {
         this.directoryManager = directoryManager;
-        this.jsonObjectCreator = jsonObjectCreator;
+        this.fileConverter = fileConverter;
         this.sessionGenerator = sessionGenerator;
     }
 
@@ -53,7 +54,7 @@ public class Extractor {
                     tempPathError = newDir.getPath();
                     //Création d'un fichier JSON contenant les propriétés du fichier
                     FileWriter JsonFile = new FileWriter(newDir.getPath() + "_properties.json");
-                    JsonFile.write(jsonObjectCreator.create(object).toJSONString());
+                    JsonFile.write(FileConverter.convertDataToJSONObject(object));
                     JsonFile.flush();
                     //Ajout des attributs
                     GregorianCalendar creationDate = object.getCreationDate();
@@ -93,7 +94,7 @@ public class Extractor {
                 tempPathError = newFile.getPath();
                 //Création d'un fichier JSON contenant les propriétés du fichier
                 FileWriter JsonFile = new FileWriter(newFile.getPath() + "_properties.json");
-                JsonFile.write(jsonObjectCreator.create(object).toJSONString());
+                JsonFile.write(FileConverter.convertDataToJSONObject(object));
                 JsonFile.flush();
                 //Insertion du contenu dans le fichier
                 ContentStream contentStream = childDocument.getContentStream();
