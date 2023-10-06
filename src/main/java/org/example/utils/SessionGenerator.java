@@ -41,10 +41,11 @@ public class SessionGenerator {
             }
         }
         catch (CmisObjectNotFoundException e) {
-            System.out.println("serviceUrl incorrecte, veuillez la changer et redémarrer l'application");
+            System.out.println("\u001B[31m" + "serviceUrl incorrecte, veuillez la changer et redémarrer l'application" + "\u001B[0m");
         }
         catch (CmisUnauthorizedException e) {
-            System.out.println("Nom d'utilisateur ou mot de passe incorrect, veuillez les changer et redémarrer l'application");
+            System.out.println("\u001B[31m" + "Nom d'utilisateur ou mot de passe incorrect, veuillez les changer et redémarrer l'application" + "\u001B[0m");
+
         }
         return this.session;
     }

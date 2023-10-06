@@ -18,7 +18,7 @@ import java.util.GregorianCalendar;
 @SuppressWarnings({"unused"})
 public class Extractor {
 
-    private String targetPath = "/test";
+    private String targetPath = "/";
     private int countExtractedFiles = 0;
     private int countExtractedFolders = 0;
     private int countErrors = 0;
@@ -71,12 +71,12 @@ public class Extractor {
         }
         catch (NullPointerException e) {
             System.out.println("\u001B[31m" + "Fichier ou dossier impossible à extraire : "  + tempPathError + "\u001B[0m");
+            for (StackTraceElement s : e.getStackTrace()) {
+                System.out.println("\u001B[31m" + s + "\u001B[0m");
+            }
             countErrors++;
         }
-        catch (CmisObjectNotFoundException e) {
-            if (e.getMessage() != null) System.out.println(e.getMessage());
-            System.out.println("targetPath incorrect, veuillez le changer et redémarrer l'application");
-        }
+
     }
 
     public void extractFiles(Folder folder) throws IOException {
