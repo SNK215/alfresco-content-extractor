@@ -5,7 +5,7 @@ import org.apache.chemistry.opencmis.client.api.Property;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked"})
 public class FileConverter {
 
     public static String convertDataToJSONObject(CmisObject object) {
@@ -21,28 +21,22 @@ public class FileConverter {
             propertyObject.put("queryName", property.getQueryName());
 
             //S'il n'y a pas de valeur pour la propriété, alors on insère un JSON vide
+            //Sinon on insère un tableau avec les valeurs, et on retire les [] qui sont insérés automatiquement
             if (property.getValues().isEmpty()) {
                 propertyObject.put("values", new JSONObject());
-            }
-            else {
+            } else {
                 JSONArray valuesArray = new JSONArray();
                 for (Object value : property.getValues()) {
-                    valuesArray.add(value.toString().replace("[","").replace("]",""));
+                    valuesArray.add(value.toString().replaceAll("\\[\\]",""));
                 }
                 propertyObject.put("values", valuesArray);
             }
-
-            // Handle extensions if needed
-//            if (property.getExtensions() != null) {
-//                // Convert extensions to JSON format here
-//                // For simplicity, we'll just add them as a string for demonstration purposes
-//                propertyObject.put("extensions", property.getExtensions().toString());
-//            }
 
             jsonArray.add(propertyObject);
         }
 
         jsonObject.put("properties", jsonArray);
+
         return jsonObject.toJSONString();
     }
 }

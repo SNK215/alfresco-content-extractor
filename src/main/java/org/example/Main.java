@@ -17,6 +17,7 @@ public class Main {
         Extractor extractor = new Extractor();
 
         directoryManager.cleanOrMake(extractor.getDestinationFolder());
+
         File newDir = new File(extractor.getDestinationFolder() + extractor.getTargetPath());
         if (!newDir.exists()){
             newDir.mkdirs();
