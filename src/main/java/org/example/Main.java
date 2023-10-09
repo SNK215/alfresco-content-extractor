@@ -11,22 +11,24 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        String targetPath = "/";
+        String destinationDirectory = "C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\extraction";
         SessionGenerator sessionGenerator = new SessionGenerator();
         DirectoryManager directoryManager = new DirectoryManager();
-        Extractor extractor = new Extractor();
+        Extractor extractor = new Extractor(targetPath, destinationDirectory);
 
-        directoryManager.cleanOrMake(extractor.getDestinationFolder());
+        directoryManager.prepareDestinationDirectory(destinationDirectory);
 
-        File newDir = new File(extractor.getDestinationFolder() + extractor.getTargetPath());
+        File newDir = new File(destinationDirectory + targetPath);
         if (!newDir.exists()){
             newDir.mkdirs();
         }
 
         Session session = sessionGenerator.generate();
 
-        Folder folder = (Folder) session.getObjectByPath(extractor.getTargetPath());
+        Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
 
-        extractor.extractContent(folder);
+        extractor.extractContent(alfrescoRootFolder);
 
         System.out.println("--- Extraction de " + extractor.getCountExtractedFiles() + " fichiers et " + extractor.getCountExtractedFolders() + " dossiers terminée ---");
 

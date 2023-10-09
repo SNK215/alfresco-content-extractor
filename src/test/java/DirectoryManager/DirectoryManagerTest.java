@@ -31,7 +31,7 @@ public class DirectoryManagerTest {
     @Test
     public void whenGivenNotExistingDirectory_thenCreateIt() throws IOException {
 
-        directoryManager.cleanOrMake(destinationFolder);
+        directoryManager.prepareDestinationDirectory(destinationFolder);
 
         Assertions.assertTrue(Files.exists(dirPath));
 
@@ -48,7 +48,7 @@ public class DirectoryManagerTest {
             testFile.createNewFile();
         }
 
-        directoryManager.cleanOrMake(destinationFolder);
+        directoryManager.prepareDestinationDirectory(destinationFolder);
 
         //Retuns false if the directory is empty
         boolean isEmptyDirectory = Files.list(dirPath).findAny().isPresent();

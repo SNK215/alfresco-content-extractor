@@ -13,20 +13,24 @@ public class DirectoryManager {
     public DirectoryManager() {
     }
 
-    public void cleanOrMake(String destinationFolder) throws IOException {
+    public void prepareDestinationDirectory(String destinationDirectory) throws IOException {
 
-        Path dirPath = Paths.get(destinationFolder);
-        File directory = new File(destinationFolder);
+        Path directoryPath = Paths.get(destinationDirectory);
+        File directory = new File(destinationDirectory);
 
         //Si le dossier de destination n'existe pas, alors on le crée
         //Sinon on vide le contenu du dossier
-        if (!Files.exists(dirPath)) {
+        if (!Files.exists(directoryPath)) {
+
             System.out.println(directory.mkdir() ?
-                    "\u001B[33m" + "Destination directory created at " + destinationFolder + "\u001B[0m" :
-                    "\u001B[31m" + "Could not create destination directory at " + destinationFolder + "\u001B[0m");
+                    "\u001B[33m" + "Destination directory created at " + destinationDirectory + "\u001B[0m" :
+                    "\u001B[31m" + "Could not create destination directory at " + destinationDirectory + "\u001B[0m");
+
         } else {
+
             FileUtils.cleanDirectory(directory);
-            System.out.println("\u001B[33m" + "Destination directory cleaned at " + destinationFolder + "\u001B[0m");
+            System.out.println("\u001B[33m" + "Destination directory cleaned at " + destinationDirectory + "\u001B[0m");
+
         }
 
     }

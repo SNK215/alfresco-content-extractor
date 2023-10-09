@@ -6,7 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 @SuppressWarnings({"unchecked"})
-public class FileConverter {
+public class JsonCreator {
 
     private SessionGenerator sessionGenerator = new SessionGenerator();
 

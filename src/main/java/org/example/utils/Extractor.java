@@ -12,15 +12,20 @@ import java.nio.file.attribute.FileTime;
 @SuppressWarnings({"unused"})
 public class Extractor {
 
-    private String targetPath = "/";
+    private String targetPath;
+    private String destinationFolder;
     private int countExtractedFiles;
     private int countExtractedFolders;
     private int countErrors;
-    private String destinationFolder = "C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\extraction";
     private String tempPathError = "";
-    private FileConverter fileConverter = new FileConverter();
+    private JsonCreator jsonCreator = new JsonCreator();
 
     public Extractor() {
+    }
+
+    public Extractor(String targetPath, String destinationFolder) {
+        this.targetPath = targetPath;
+        this.destinationFolder = destinationFolder;
     }
 
     public void extractContent(Folder folder) throws IOException {
@@ -42,7 +47,7 @@ public class Extractor {
 
                     //Création d'un fichier JSON contenant les propriétés du fichier
                     FileWriter JsonFile = new FileWriter(newDir.getPath() + "_properties.json");
-                    JsonFile.write(fileConverter.convertDataToJSONObject(object));
+                    JsonFile.write(jsonCreator.convertDataToJSONObject(object));
                     JsonFile.flush();
 
                     //Ajout des attributs
@@ -84,7 +89,7 @@ public class Extractor {
 
                 //Création d'un fichier JSON contenant les propriétés du fichier
                 FileWriter JsonFile = new FileWriter(newFile.getPath() + "_properties.json");
-                JsonFile.write(fileConverter.convertDataToJSONObject(object));
+                JsonFile.write(jsonCreator.convertDataToJSONObject(object));
                 JsonFile.flush();
 
                 //Insertion du contenu dans le fichier
