@@ -1,17 +1,13 @@
 package org.example.utils;
 
 import org.apache.chemistry.opencmis.client.api.*;
-import org.apache.chemistry.opencmis.commons.data.Ace;
-import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.FileUtils;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
-import java.util.GregorianCalendar;
 
 @SuppressWarnings({"unused"})
 public class Extractor {
@@ -22,6 +18,7 @@ public class Extractor {
     private int countErrors;
     private String destinationFolder = "C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\extraction";
     private String tempPathError = "";
+    private FileConverter fileConverter = new FileConverter();
 
     public Extractor() {
     }
@@ -45,7 +42,7 @@ public class Extractor {
 
                     //Création d'un fichier JSON contenant les propriétés du fichier
                     FileWriter JsonFile = new FileWriter(newDir.getPath() + "_properties.json");
-                    JsonFile.write(FileConverter.convertDataToJSONObject(object));
+                    JsonFile.write(fileConverter.convertDataToJSONObject(object));
                     JsonFile.flush();
 
                     //Ajout des attributs
@@ -87,7 +84,7 @@ public class Extractor {
 
                 //Création d'un fichier JSON contenant les propriétés du fichier
                 FileWriter JsonFile = new FileWriter(newFile.getPath() + "_properties.json");
-                JsonFile.write(FileConverter.convertDataToJSONObject(object));
+                JsonFile.write(fileConverter.convertDataToJSONObject(object));
                 JsonFile.flush();
 
                 //Insertion du contenu dans le fichier

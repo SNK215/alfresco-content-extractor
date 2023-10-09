@@ -1,23 +1,17 @@
 package org.example.utils;
 
-import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.OperationContext;
-import org.apache.chemistry.opencmis.client.api.Property;
-import org.apache.chemistry.opencmis.client.api.Session;
+import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 @SuppressWarnings({"unchecked"})
 public class FileConverter {
 
-    private OperationContext oc;
-    private Session session;
+    private SessionGenerator sessionGenerator = new SessionGenerator();
 
-    //System.out.println("ACL : " + session.getObjectByPath(childDocument.getPaths().get(0),oc).getAcl().getAces());
-
-
-    public static String convertDataToJSONObject(CmisObject object) {
-
+    public String convertDataToJSONObject(CmisObject object) {
+        //Insertion des propriétés dans un JSON
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
@@ -45,23 +39,31 @@ public class FileConverter {
 
         jsonObject.put("properties", jsonArray);
 
+        //Insertion des permissions dans un JSON
+        Session session = sessionGenerator.generate();
+        OperationContext oc = session.createOperationContext();
+        oc.setIncludeAcls(true);
+
+        JSONArray jsonArrayAce = new JSONArray();
+
+        if (object instanceof Document) {
+
+            Document document = (Document) object;
+
+            for (Ace ace : session.getObjectByPath(document.getPaths().get(0),oc).getAcl().getAces()) {
+                JSONObject jsonObjectAce = new JSONObject();
+                jsonObjectAce.put("principalId",ace.getPrincipalId());
+                jsonObjectAce.put("permission", ace.getPermissions().get(0));
+
+                jsonArrayAce.add(jsonObjectAce);
+            }
+
+            jsonObject.put("permissions",jsonArrayAce);
+        }
+
         return jsonObject.toJSONString();
     }
 
-    public OperationContext getOc() {
-        return oc;
-    }
 
-    public void setOc(OperationContext oc) {
-        this.oc = oc;
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
-    }
 }
 
