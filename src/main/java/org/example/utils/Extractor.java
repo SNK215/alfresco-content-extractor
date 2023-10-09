@@ -1,8 +1,7 @@
 package org.example.utils;
 
-import org.apache.chemistry.opencmis.client.api.CmisObject;
-import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.chemistry.opencmis.client.api.Folder;
+import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.FileUtils;
 
@@ -74,7 +73,6 @@ public class Extractor {
                 System.out.println("\u001B[31m" + s + "\u001B[0m");
             }
         }
-
     }
 
     public void extractFiles(Folder folder) throws IOException {

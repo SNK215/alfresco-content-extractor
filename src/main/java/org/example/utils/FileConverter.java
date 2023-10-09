@@ -1,12 +1,20 @@
 package org.example.utils;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
+import org.apache.chemistry.opencmis.client.api.OperationContext;
 import org.apache.chemistry.opencmis.client.api.Property;
+import org.apache.chemistry.opencmis.client.api.Session;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 @SuppressWarnings({"unchecked"})
 public class FileConverter {
+
+    private OperationContext oc;
+    private Session session;
+
+    //System.out.println("ACL : " + session.getObjectByPath(childDocument.getPaths().get(0),oc).getAcl().getAces());
+
 
     public static String convertDataToJSONObject(CmisObject object) {
 
@@ -38,6 +46,22 @@ public class FileConverter {
         jsonObject.put("properties", jsonArray);
 
         return jsonObject.toJSONString();
+    }
+
+    public OperationContext getOc() {
+        return oc;
+    }
+
+    public void setOc(OperationContext oc) {
+        this.oc = oc;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 }
 

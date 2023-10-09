@@ -1,7 +1,9 @@
 package org.example;
 
-import org.apache.chemistry.opencmis.client.api.Folder;
-import org.apache.chemistry.opencmis.client.api.Session;
+import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.chemistry.opencmis.commons.data.Ace;
+import org.apache.chemistry.opencmis.commons.data.Acl;
+import org.apache.chemistry.opencmis.commons.enums.CapabilityAcl;
 import org.example.utils.*;
 
 import java.io.File;
@@ -14,6 +16,7 @@ public class Main {
 
         SessionGenerator sessionGenerator = new SessionGenerator();
         DirectoryManager directoryManager = new DirectoryManager();
+        FileConverter fileConverter = new FileConverter();
         Extractor extractor = new Extractor();
 
         directoryManager.cleanOrMake(extractor.getDestinationFolder());
@@ -24,7 +27,13 @@ public class Main {
         }
 
         Session session = sessionGenerator.generate();
+        OperationContext oc = session.createOperationContext();
+        oc.setIncludeAcls(true);
+        fileConverter.setOc(oc);
+        fileConverter.setSession(session);
+
         Folder folder = (Folder) session.getObjectByPath(extractor.getTargetPath());
+
         extractor.extractContent(folder);
 
         System.out.println("--- Extraction de " + extractor.getCountExtractedFiles() + " fichiers et " + extractor.getCountExtractedFolders() + " dossiers terminée ---");
