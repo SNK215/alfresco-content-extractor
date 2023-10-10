@@ -28,7 +28,7 @@ public class Extractor {
         this.destinationFolder = destinationFolder;
     }
 
-    public void extractContent(Folder folder) throws IOException {
+    public void extractFolders(Folder folder) throws IOException {
         try {
             //Extraction des fichiers situés dans le Folder qui est fourni en paramètre
             extractFiles(folder);
@@ -64,7 +64,7 @@ public class Extractor {
 
                     //On extrait à nouveau les dossiers et fichiers enfants dans chaque dossier enfant
                     extractFiles(childFolder);
-                    extractContent(childFolder);
+                    extractFolders(childFolder);
                 }
             }
         }

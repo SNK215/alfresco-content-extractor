@@ -19,16 +19,15 @@ public class Main {
 
         directoryManager.prepareDestinationDirectory(destinationDirectory);
 
+        //Utile uniquement si on extrait un dossier autre que le dossier root
         File newDir = new File(destinationDirectory + targetPath);
         if (!newDir.exists()){
             newDir.mkdirs();
         }
 
         Session session = sessionGenerator.generate();
-
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
-
-        extractor.extractContent(alfrescoRootFolder);
+        extractor.extractFolders(alfrescoRootFolder);
 
         System.out.println("--- Extraction de " + extractor.getCountExtractedFiles() + " fichiers et " + extractor.getCountExtractedFolders() + " dossiers terminée ---");
 
