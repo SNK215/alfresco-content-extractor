@@ -1,1 +1,2 @@
-2023-10-11 15:53:52.043 [main] WARN  org.example.utils.DirectoryManager - Destination directory cleaned at C:\Users\llangowski\Documents\extraction
+2023-10-11 16:37:15.377 [main] WARN  org.example.utils.DirectoryManager - Destination directory cleaned at C:\Users\llangowski\Documents\extraction
+2023-10-11 16:37:15.676 [main] ERROR org.example.utils.SessionGenerator - Incorrect username or password, please change it and restart the app

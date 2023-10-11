@@ -62,9 +62,11 @@ public class SessionGenerator {
         }
         catch (CmisObjectNotFoundException e) {
             logger.error("Incorrect serviceUrl, please change it and restart the app (" + getCredentials().getServiceUrl() + ")");
+            throw new CmisObjectNotFoundException();
         }
         catch (CmisUnauthorizedException e) {
             logger.error("Incorrect username or password, please change it and restart the app");
+            throw new CmisUnauthorizedException();
         }
         return this.session;
     }
