@@ -10,7 +10,7 @@ public class Main {
 
 
     public static void main(String[] args) throws IOException {
-
+        new TotalSizeCalculator();
         String targetPath = "/";
         String destinationDirectory = "C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\extraction";
         SessionGenerator sessionGenerator = new SessionGenerator();
@@ -30,7 +30,7 @@ public class Main {
         extractor.extractFolders(alfrescoRootFolder);
 
         System.out.println("--- Extraction de " + extractor.getCountExtractedFiles() + " fichiers et " + extractor.getCountExtractedFolders() + " dossiers terminée ---");
-
+        System.out.println("--- Création de " + extractor.getCountCreatedJson() + " fichiers Json ---");
         System.out.println(extractor.getCountErrors() == 0 ?
                 "--- Aucune erreur rencontrée ---" :
                 "--- " + extractor.getCountErrors() + " fichier ou dossier n'a pas pu être extrait ---"

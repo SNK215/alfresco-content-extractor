@@ -21,14 +21,10 @@ import java.util.Properties;
 
 @SuppressWarnings({"unused"})
 public class SessionGenerator {
-    private String serviceUrl = "http://localhost:8080/alfresco/api/-default-/public/cmis/versions/1.1/browser";
-    private String user = "admin";
-    private String password = "admin";
     private Session session = null;
-
     public SessionGenerator() {
     }
-    private Credentials getCredentials() {
+    public Credentials getCredentials() {
         Credentials credentials = new Credentials();
         File file = new File("extractor_application.properties");
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
@@ -74,29 +70,5 @@ public class SessionGenerator {
 
     public void setSession(Session session) {
         this.session = session;
-    }
-
-    public String getServiceUrl() {
-        return serviceUrl;
-    }
-
-    public void setServiceUrl(String serviceUrl) {
-        this.serviceUrl = serviceUrl;
-    }
-
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }
