@@ -4,6 +4,7 @@ import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -49,6 +50,7 @@ public class JsonCreator {
         Session session = sessionGenerator.generate();
         OperationContext oc = session.createOperationContext();
         oc.setIncludeAcls(true);
+        oc.setIncludeRelationships(IncludeRelationships.BOTH);
 
         JSONArray jsonArrayAce = new JSONArray();
 
@@ -70,7 +72,5 @@ public class JsonCreator {
 
         return jsonObject.toJSONString();
     }
-
-
 }
 
