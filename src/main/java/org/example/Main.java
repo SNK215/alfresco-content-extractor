@@ -17,7 +17,7 @@ public class Main {
     protected static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) throws IOException {
-
+        new TotalSizeCalculator();
         String targetPath = "/";
         String destinationDirectory = "C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\extraction";
         SessionGenerator sessionGenerator = new SessionGenerator();
@@ -34,7 +34,7 @@ public class Main {
 
         Session session = sessionGenerator.generate();
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
-        logger.info("Connected to Alfresco through " + sessionGenerator.getServiceUrl());
+        logger.info("Connected to Alfresco through " + sessionGenerator.getCredentials().getServiceUrl());
         logger.warn("Extraction started");
         extractor.extractFolders(alfrescoRootFolder);
 

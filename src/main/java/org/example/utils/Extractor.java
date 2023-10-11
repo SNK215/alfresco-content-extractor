@@ -19,6 +19,7 @@ public class Extractor {
     private String targetPath;
     private String destinationFolder;
     private int countExtractedFiles;
+    private int countCreatedJson;
     private int countExtractedFolders;
     private int countErrors;
     private String tempPathError = "";
@@ -56,6 +57,7 @@ public class Extractor {
                     //Création d'un fichier JSON contenant les propriétés du fichier
                     FileWriter JsonFile = new FileWriter(newDir.getPath() + "_properties.json");
                     JsonFile.write(jsonCreator.convertDataToJSONObject(object));
+                    countCreatedJson++;
                     JsonFile.flush();
                     logger.info("JSON file created : " + newDir.getName() + "_properties.json");
 
@@ -94,6 +96,7 @@ public class Extractor {
                 //Création d'un fichier JSON contenant les propriétés du fichier
                 FileWriter JsonFile = new FileWriter(newFile.getPath() + "_properties.json");
                 JsonFile.write(jsonCreator.convertDataToJSONObject(object));
+                countCreatedJson++;
                 JsonFile.flush();
                 logger.info("JSON file created : " + newFile.getName() + "_properties.json");
 
@@ -158,5 +161,13 @@ public class Extractor {
 
     public void setDestinationFolder(String destinationFolder) {
         this.destinationFolder = destinationFolder;
+    }
+
+    public int getCountCreatedJson() {
+        return countCreatedJson;
+    }
+
+    public void setCountCreatedJson(int countCreatedJson) {
+        this.countCreatedJson = countCreatedJson;
     }
 }
