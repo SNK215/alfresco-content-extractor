@@ -18,8 +18,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        logger.info("@|green hello|@");
-
         String targetPath = "/";
         String destinationDirectory = "C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\extraction";
         SessionGenerator sessionGenerator = new SessionGenerator();
@@ -35,8 +33,8 @@ public class Main {
         }
 
         Session session = sessionGenerator.generate();
-        logger.info("Connected to Alfresco through " + sessionGenerator.getServiceUrl());
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
+        logger.info("Connected to Alfresco through " + sessionGenerator.getServiceUrl());
         logger.warn("Extraction started");
         extractor.extractFolders(alfrescoRootFolder);
 

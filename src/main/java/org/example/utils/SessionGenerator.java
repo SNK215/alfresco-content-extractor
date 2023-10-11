@@ -33,6 +33,7 @@ public class SessionGenerator {
 
     public SessionGenerator() {
     }
+
     private Credentials getCredentials() {
         Credentials credentials = new Credentials();
         File file = new File("extractor_application.properties");
