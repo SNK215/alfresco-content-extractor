@@ -1,15 +1,24 @@
 package org.example;
 
 import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.utils.*;
+import org.fusesource.jansi.AnsiConsole;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class Main {
 
+    protected static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) throws IOException {
+
+        logger.info("@|green hello|@");
 
         String targetPath = "/";
         String destinationDirectory = "C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\extraction";
@@ -26,15 +35,21 @@ public class Main {
         }
 
         Session session = sessionGenerator.generate();
+        logger.info("Connected to Alfresco through " + sessionGenerator.getServiceUrl());
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
+        logger.warn("Extraction started");
         extractor.extractFolders(alfrescoRootFolder);
 
-        System.out.println("--- Extraction de " + extractor.getCountExtractedFiles() + " fichiers et " + extractor.getCountExtractedFolders() + " dossiers terminée ---");
-
+        System.out.println("\n" + extractor.getCountExtractedFiles() + " files and " + extractor.getCountExtractedFolders() + " directories extracted successfully");
         System.out.println(extractor.getCountErrors() == 0 ?
-                "--- Aucune erreur rencontrée ---" :
-                "--- " + extractor.getCountErrors() + " fichier ou dossier n'a pas pu être extrait ---"
-                );
+                "No errors detected" :
+                extractor.getCountErrors() + " files or directories couldn't be extracted"
+        );
+
+        System.out.println("\n\nPress enter to exit...\n\n");
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        in.readLine();
 
     }
 }

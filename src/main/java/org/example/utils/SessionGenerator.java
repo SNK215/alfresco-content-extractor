@@ -8,6 +8,8 @@ import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +21,8 @@ public class SessionGenerator {
     private String user = "admin";
     private String password = "admin";
     private Session session = null;
+    protected static final Logger logger = LogManager.getLogger();
+
 
     public SessionGenerator() {
     }
@@ -41,11 +45,10 @@ public class SessionGenerator {
             }
         }
         catch (CmisObjectNotFoundException e) {
-            System.out.println("\u001B[31m" + "serviceUrl incorrecte, veuillez la changer et redémarrer l'application" + "\u001B[0m");
+            logger.error("Incorrect serviceUrl, please change it and restart the app (" + serviceUrl + ")");
         }
         catch (CmisUnauthorizedException e) {
-            System.out.println("\u001B[31m" + "Nom d'utilisateur ou mot de passe incorrect, veuillez les changer et redémarrer l'application" + "\u001B[0m");
-
+            logger.error("Incorrect username or password, please change it and restart the app");
         }
         return this.session;
     }

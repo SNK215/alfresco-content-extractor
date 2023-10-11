@@ -2,6 +2,8 @@ package org.example.utils;
 
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.data.Ace;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -9,6 +11,8 @@ import org.json.simple.JSONObject;
 public class JsonCreator {
 
     private SessionGenerator sessionGenerator = new SessionGenerator();
+    protected static final Logger logger = LogManager.getLogger();
+
 
     public String convertDataToJSONObject(CmisObject object) {
         //Insertion des propriétés dans un JSON
@@ -38,6 +42,8 @@ public class JsonCreator {
         }
 
         jsonObject.put("properties", jsonArray);
+        logger.info("Properties inserted in JSON File");
+
 
         //Insertion des permissions dans un JSON
         Session session = sessionGenerator.generate();
@@ -59,6 +65,7 @@ public class JsonCreator {
             }
 
             jsonObject.put("permissions",jsonArrayAce);
+            logger.info("Permissions inserted in JSON File");
         }
 
         return jsonObject.toJSONString();

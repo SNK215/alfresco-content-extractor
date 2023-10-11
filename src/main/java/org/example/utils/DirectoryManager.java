@@ -1,7 +1,8 @@
 package org.example.utils;
 
 import org.apache.commons.io.FileUtils;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,10 +11,13 @@ import java.nio.file.Paths;
 
 public class DirectoryManager {
 
+    protected static final Logger logger = LogManager.getLogger();
+
     public DirectoryManager() {
     }
 
     public void prepareDestinationDirectory(String destinationDirectory) throws IOException {
+
 
         Path directoryPath = Paths.get(destinationDirectory);
         File directory = new File(destinationDirectory);
@@ -22,14 +26,16 @@ public class DirectoryManager {
         //Sinon on vide le contenu du dossier
         if (!Files.exists(directoryPath)) {
 
-            System.out.println(directory.mkdir() ?
-                    "\u001B[33m" + "Destination directory created at " + destinationDirectory + "\u001B[0m" :
-                    "\u001B[31m" + "Could not create destination directory at " + destinationDirectory + "\u001B[0m");
+            logger.warn(directory.mkdir() ?
+                    "Destination directory created at " + destinationDirectory :
+                    "Could not create destination directory at " + destinationDirectory
+            );
+
 
         } else {
 
             FileUtils.cleanDirectory(directory);
-            System.out.println("\u001B[33m" + "Destination directory cleaned at " + destinationDirectory + "\u001B[0m");
+            logger.warn("Destination directory cleaned at " + destinationDirectory);
 
         }
 
