@@ -34,7 +34,7 @@ public class SessionGenerator {
     public SessionGenerator() {
     }
 
-    private Credentials getCredentials() {
+    public Credentials getCredentials() {
         Credentials credentials = new Credentials();
         File file = new File("extractor_application.properties");
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
@@ -66,9 +66,11 @@ public class SessionGenerator {
         }
         catch (CmisObjectNotFoundException e) {
             logger.error("Incorrect serviceUrl, please change it and restart the app (" + serviceUrl + ")");
+            throw new CmisObjectNotFoundException();
         }
         catch (CmisUnauthorizedException e) {
             logger.error("Incorrect username or password, please change it and restart the app");
+            throw new CmisUnauthorizedException();
         }
         return this.session;
     }
