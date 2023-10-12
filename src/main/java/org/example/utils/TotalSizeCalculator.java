@@ -3,12 +3,15 @@ package org.example.utils;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 public class TotalSizeCalculator {
     private Session session;
     private long fileCount;
     private long folderCount;
+    protected static final Logger logger = LogManager.getLogger();
 
     public TotalSizeCalculator() {
         session = new SessionGenerator().generate();
@@ -20,7 +23,7 @@ public class TotalSizeCalculator {
             //Compte de fichier à revoir
             System.out.println("Nombre total de fichiers 1 : " + fileCount);
         } else {
-            System.out.println("Le dossier racine n'a pas été trouvé");
+            logger.error("Root folder not found");
         }
     }
     public String findRootNodeId (Session session) {
@@ -48,7 +51,7 @@ public class TotalSizeCalculator {
         try {
             rootFolder = (Folder) session.getObject(rootId);
         } catch (CmisObjectNotFoundException e) {
-            System.err.println("Dossier racine introuvable : " + e.getMessage());
+            logger.error("Root folder not found"+ e.getMessage());
             return 0;
         }
         long totalSize = 0;
