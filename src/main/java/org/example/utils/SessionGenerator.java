@@ -25,35 +25,19 @@ import java.util.Properties;
 @SuppressWarnings({"unused"})
 public class SessionGenerator {
     private Session session = null;
-    protected static final Logger logger = LogManager.getLogger();
+    Credentials credentials = new Credentials();
+    private static final Logger logger = LogManager.getLogger();
 
     public SessionGenerator() {
-    }
-
-    public Credentials getCredentials() {
-        Credentials credentials = new Credentials();
-        File file = new File("extractor_application.properties");
-        try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
-            Properties prop = new Properties();
-            prop.load(input);
-            credentials.setUser(prop.getProperty("user"));
-            credentials.setPassword(prop.getProperty("password"));
-            credentials.setServiceUrl(prop.getProperty("serviceUrl"));
-        } catch (IOException e) {
-            logger.error("Error retrieving login data, please verify and modify extractor_application file");
-            e.printStackTrace();
-        }
-        return credentials;
     }
     public Session generate() {
         try {
             if (session == null) {
                 SessionFactory factory = SessionFactoryImpl.newInstance();
                 Map<String, String> parameter = new HashMap<>();
-
-                parameter.put(SessionParameter.USER, getCredentials().getUser());
-                parameter.put(SessionParameter.PASSWORD, getCredentials().getPassword());
-                parameter.put(SessionParameter.BROWSER_URL, getCredentials().getServiceUrl());
+                parameter.put(SessionParameter.USER, credentials.getUser());
+                parameter.put(SessionParameter.PASSWORD, credentials.getPassword());
+                parameter.put(SessionParameter.BROWSER_URL, credentials.getServiceUrl());
                 parameter.put(SessionParameter.BINDING_TYPE, BindingType.BROWSER.value());
 
                 List<Repository> repositories = factory.getRepositories(parameter);
@@ -62,7 +46,7 @@ public class SessionGenerator {
             }
         }
         catch (CmisObjectNotFoundException e) {
-            logger.error("Incorrect serviceUrl, please change it and restart the app (" + getCredentials().getServiceUrl() + ")");
+            logger.error("Incorrect serviceUrl, please change it and restart the app (" + credentials.getServiceUrl() + ")");
             throw new CmisObjectNotFoundException();
         }
         catch (CmisUnauthorizedException e) {

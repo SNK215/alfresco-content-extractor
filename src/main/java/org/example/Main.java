@@ -3,6 +3,7 @@ package org.example;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.model.Credentials;
 import org.example.utils.*;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -13,13 +14,13 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 
 public class Main {
-
     protected static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) throws IOException {
         new TotalSizeCalculator();
         String targetPath = "/";
-        String destinationDirectory = "C:\\Users\\"+System.getProperty("user.name")+"\\Documents\\extraction";
+        Credentials credentials = new Credentials();
+        String destinationDirectory = credentials.getDestinationDirectory();
         SessionGenerator sessionGenerator = new SessionGenerator();
         DirectoryManager directoryManager = new DirectoryManager();
         Extractor extractor = new Extractor(targetPath, destinationDirectory);
@@ -34,7 +35,7 @@ public class Main {
 
         Session session = sessionGenerator.generate();
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
-        logger.info("Connected to Alfresco through " + sessionGenerator.getCredentials().getServiceUrl());
+        logger.info("Connected to Alfresco through " + credentials.getServiceUrl());
         logger.warn("Extraction started");
         extractor.extractFolders(alfrescoRootFolder);
 
