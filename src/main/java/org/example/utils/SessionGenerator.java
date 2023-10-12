@@ -39,7 +39,6 @@ public class SessionGenerator {
             credentials.setUser(prop.getProperty("user"));
             credentials.setPassword(prop.getProperty("password"));
             credentials.setServiceUrl(prop.getProperty("serviceUrl"));
-            logger.info("Recovery of login data successful");
         } catch (IOException e) {
             logger.error("Error retrieving login data, please verify and modify extractor_application file");
             e.printStackTrace();
