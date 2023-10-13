@@ -5,12 +5,14 @@ import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.model.Credentials;
 
+import java.io.File;
 import java.util.Scanner;
-
 
 public class TotalSizeCalculator {
     private long totalSize;
+    private long availableDiskSpace;
     private long fileCount;
     private long folderCount;
     private String prefixMultipliers;
@@ -21,15 +23,12 @@ public class TotalSizeCalculator {
         String rootId = findRootNodeId(session);
         if (rootId!=null) {
             totalSize = calculateTotalSizeAndCount(session, rootId);
-            System.out.println("La taille totale de tous les fichiers et dossiers est : " + totalSize + " octets");
-            System.out.println("Nombre total de dossiers : " + folderCount);
-            //Compte de fichier à revoir
-            System.out.println("Nombre total de fichiers 1 : " + fileCount);
             startPermission();
         } else {
             logger.error("Root folder not found");
         }
     }
+
     public String findRootNodeId (Session session) {
         Folder rootFolder = session.getRootFolder();
         String rootNodeId = rootFolder.getId();
@@ -51,7 +50,7 @@ public class TotalSizeCalculator {
         return null;
     }
     public long calculateTotalSizeAndCount(Session session, String rootId) {
-        Folder rootFolder = null;
+        Folder rootFolder;
         try {
             rootFolder = (Folder) session.getObject(rootId);
         } catch (CmisObjectNotFoundException e) {
@@ -73,34 +72,56 @@ public class TotalSizeCalculator {
         }
         return calcSize;
     }
+    public void calculateAvailableDiskSpace() {
+        String partition = new Credentials().getDestinationDirectory().substring(0,2);
+        logger.info("Chosen partition : " + partition);
+        File file = new File(partition);
+        availableDiskSpace = file.getFreeSpace();
+    }
     public void startPermission(){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Please make sure your computer's available disk space is greater than "+ sizeConverter() + " " + prefixMultipliers +".");
-        System.out.println("Do you want to start extracting ?");
-        System.out.println("YES : press [y]");
-        System.out.println("NO : press another key");
-        String choice = sc.nextLine();
-        if (!choice.equalsIgnoreCase("y")) {
-            System.exit(0);
+        calculateAvailableDiskSpace();
+        if (totalSize >= availableDiskSpace) {
+            logger.warn("Insufficient memory. Available: " + availableDiskSpace + " bytes(" + sizeConverter(availableDiskSpace) + " " + prefixMultipliers+ "). Minimum expected: " + totalSize + " bytes("+ sizeConverter(totalSize) + " " + prefixMultipliers +").");
+            System.out.println("Not enough memory space on your disk, please free up some space or change destination directory.");
+            System.out.println("Do you want to restart ?");
+            if (getUserChoice().equals("y")){
+                startPermission();
+            }
+        } else {
+            logger.info("Available space on chosen partition : " + sizeConverter(availableDiskSpace) + " " + prefixMultipliers +".");
+            logger.info("Total size of folders and files to extract : " + sizeConverter(totalSize) + " " + prefixMultipliers +".");
+            System.out.println("Do you want to start extracting ?");
+            getUserChoice();
         }
     }
-    public double sizeConverter() {
+    public String getUserChoice() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("YES : press [y]");
+        System.out.println("NO : press another key");
+        String choice = sc.nextLine().toLowerCase();
+        if (!choice.equals("y")) {
+            System.exit(0);
+        }
+        return choice;
+    }
+    public double sizeConverter(long numberToConvert) {
         double adaptedTotalSize = 0;
-        if (totalSize < 1e3) {
+        if (numberToConvert < 1e3) {
+            adaptedTotalSize = numberToConvert;
             prefixMultipliers = "bytes";
-        } else if (totalSize < 1e6) {
-            adaptedTotalSize = (double) totalSize / 1e3;
+        } else if (numberToConvert < 1e6) {
+            adaptedTotalSize = (double) numberToConvert / 1e3;
+            prefixMultipliers = "KB";
+        } else if (numberToConvert < 1e9) {
+            adaptedTotalSize = (double) numberToConvert / 1e6;
             prefixMultipliers = "MB";
-        } else if (totalSize < 1e9) {
-            adaptedTotalSize = (double) totalSize / 1e6;
-            prefixMultipliers = "MB";
-        } else if (totalSize < 1e12) {
-            adaptedTotalSize = (double) totalSize / 1e9;
+        } else if (numberToConvert < 1e12) {
+            adaptedTotalSize = (double) numberToConvert / 1e9;
             prefixMultipliers = "GB";
         } else {
-            adaptedTotalSize = (double) totalSize / 1e12;
+            adaptedTotalSize = (double) numberToConvert / 1e12;
             prefixMultipliers = "TB";
         }
-        return Math.round(adaptedTotalSize*100.0)/100.0+0.01;
+        return Math.round(adaptedTotalSize*100.0)/100.0;
     }
 }
