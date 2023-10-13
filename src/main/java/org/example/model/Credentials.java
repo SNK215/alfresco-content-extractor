@@ -31,12 +31,6 @@ public class Credentials {
         }
     }
 
-    public Credentials(String user, String password, String serviceUrl) {
-        this.user = user;
-        this.password = password;
-        this.serviceUrl = serviceUrl;
-    }
-
     public String getUser() {
         return user;
     }
