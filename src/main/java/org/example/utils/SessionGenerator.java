@@ -13,31 +13,31 @@ import org.apache.logging.log4j.Logger;
 import org.example.model.Credentials;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 @SuppressWarnings({"unused"})
 public class SessionGenerator {
     private Session session = null;
-    Credentials credentials = new Credentials();
+    //private Credentials credentials;
     private static final Logger logger = LogManager.getLogger();
 
     public SessionGenerator() {
+
     }
-    public Session generate() {
+
+    public Session generate(Credentials credentials) {
         try {
             if (session == null) {
                 SessionFactory factory = SessionFactoryImpl.newInstance();
                 Map<String, String> parameter = new HashMap<>();
-                parameter.put(SessionParameter.USER, credentials.getUser());
-                parameter.put(SessionParameter.PASSWORD, credentials.getPassword());
-                parameter.put(SessionParameter.BROWSER_URL, credentials.getServiceUrl());
+                String user = credentials.getUser();
+                String password = credentials.getPassword();
+                String serviceUrl = credentials.getServiceUrl();
+                parameter.put(SessionParameter.USER, user);
+                parameter.put(SessionParameter.PASSWORD, password);
+                parameter.put(SessionParameter.BROWSER_URL, serviceUrl);
                 parameter.put(SessionParameter.BINDING_TYPE, BindingType.BROWSER.value());
 
                 List<Repository> repositories = factory.getRepositories(parameter);

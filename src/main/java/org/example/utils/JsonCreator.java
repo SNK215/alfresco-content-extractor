@@ -5,6 +5,7 @@ import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
+import org.example.model.Credentials;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -47,7 +48,7 @@ public class JsonCreator {
 
 
         //Insertion des permissions dans un JSON
-        Session session = sessionGenerator.generate();
+        Session session = sessionGenerator.generate(new Credentials());
         OperationContext oc = session.createOperationContext();
         oc.setIncludeAcls(true);
         oc.setIncludeRelationships(IncludeRelationships.BOTH);

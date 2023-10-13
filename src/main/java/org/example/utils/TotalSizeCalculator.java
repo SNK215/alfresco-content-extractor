@@ -5,6 +5,7 @@ import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.example.model.Credentials;
 
 import java.util.Scanner;
 
@@ -17,7 +18,7 @@ public class TotalSizeCalculator {
     protected static final Logger logger = LogManager.getLogger();
 
     public TotalSizeCalculator() {
-        Session session = new SessionGenerator().generate();
+        Session session = new SessionGenerator().generate(new Credentials());
         String rootId = findRootNodeId(session);
         if (rootId!=null) {
             totalSize = calculateTotalSizeAndCount(session, rootId);
