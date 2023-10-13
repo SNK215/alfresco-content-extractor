@@ -5,13 +5,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.example.model.Credentials;
 import org.example.utils.*;
-import org.fusesource.jansi.AnsiConsole;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 
 public class Main {
     protected static final Logger logger = LogManager.getLogger();
@@ -33,7 +31,7 @@ public class Main {
             newDir.mkdirs();
         }
 
-        Session session = sessionGenerator.generate();
+        Session session = sessionGenerator.generate(credentials);
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
         logger.info("Connected to Alfresco through " + credentials.getServiceUrl());
         logger.warn("Extraction started");

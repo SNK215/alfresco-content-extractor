@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -26,11 +27,8 @@ public class DirectoryManager {
         //Sinon on vide le contenu du dossier
         if (!Files.exists(directoryPath)) {
 
-            logger.warn(directory.mkdir() ?
-                    "Destination directory created at " + destinationDirectory :
-                    "Could not create destination directory at " + destinationDirectory
-            );
-
+            directory.mkdir();
+            logger.warn("Destination directory created at " + destinationDirectory);
 
         } else {
 

@@ -18,12 +18,12 @@ public class Credentials {
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
             Properties prop = new Properties();
             prop.load(input);
-            setUser(prop.getProperty("user"));
-            setPassword(prop.getProperty("password"));
-            setServiceUrl(prop.getProperty("serviceUrl"));
-            setDestinationDirectory(prop.getProperty("destinationDirectory"));
+            this.user = prop.getProperty("user");
+            this.password = prop.getProperty("password");
+            this.serviceUrl = prop.getProperty("serviceUrl");
+            this.destinationDirectory = prop.getProperty("destinationDirectory");
         } catch (FileNotFoundException e) {
-            logger.error("File " + file.getName() + "not found");
+            logger.error("File " + file.getName() + " not found");
             throw new RuntimeException(e);
         } catch (IOException e) {
             logger.error("Error retrieving login data, please verify and modify extractor_application file");

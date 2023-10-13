@@ -19,7 +19,7 @@ public class TotalSizeCalculator {
     protected static final Logger logger = LogManager.getLogger();
 
     public TotalSizeCalculator() {
-        Session session = new SessionGenerator().generate();
+        Session session = new SessionGenerator().generate(new Credentials());
         String rootId = findRootNodeId(session);
         if (rootId!=null) {
             totalSize = calculateTotalSizeAndCount(session, rootId);
