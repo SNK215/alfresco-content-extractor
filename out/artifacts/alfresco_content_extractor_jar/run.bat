@@ -1,1 +1,0 @@
-java -jar alfresco-content-extractor.jar 

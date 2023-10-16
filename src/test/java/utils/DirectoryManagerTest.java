@@ -21,7 +21,7 @@ public class DirectoryManagerTest {
     private String user;
     private String destinationDirectory;
     private String destinationFile;
-    Path dirPath;
+    private Path dirPath;
 
 
     @BeforeEach
