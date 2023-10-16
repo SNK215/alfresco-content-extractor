@@ -9,13 +9,11 @@ import org.junit.jupiter.api.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NotDirectoryException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
 
 
 public class DirectoryManagerTest {
@@ -37,6 +35,7 @@ public class DirectoryManagerTest {
     }
 
     @Test
+    @DisplayName("When destination directory doesn't exist, then create it")
     public void whenGivenNotExistingDirectory_thenCreateIt() throws IOException {
         //ACT
         directoryManager.prepareDestinationDirectory(destinationDirectory);
@@ -49,6 +48,7 @@ public class DirectoryManagerTest {
     }
 
     @Test
+    @DisplayName("When destination directory exists, then delete its content")
     public void whenGivenExistingFilledDirectory_thenCleanIt() throws IOException {
         //ARRANGE
         File testDirectoryWithFile = new File(destinationDirectory);
@@ -72,6 +72,7 @@ public class DirectoryManagerTest {
     }
 
     @Test
+    @DisplayName("When incorrect destination directory, then throws exception")
     public void whenGivenIncorrectDestinationDirectory_thenThrowsException() throws IOException {
         //ARRANGE
         destinationDirectory = "incorrectDestinationDirectory?/";

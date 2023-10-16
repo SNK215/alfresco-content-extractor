@@ -7,12 +7,11 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundExcept
 import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.example.model.Credentials;
 import org.example.utils.SessionGenerator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -36,6 +35,7 @@ public class SessionGeneratorTest {
     }
 
     @Test
+    @DisplayName("Given correct parameters, when generate session, then returns session")
     public void givenCorrectParameters_whenGenerate_thenReturnsSession() {
         //ARRANGE
         when(credentials.getUser()).thenReturn("admin");
@@ -56,6 +56,7 @@ public class SessionGeneratorTest {
     }
 
     @Test
+    @DisplayName("Given incorrect serviceUrl, when generate session, then throws CmisObjectNotFoundException")
     public void givenIncorrectServiceUrl_whenGenerate_thenThrowsCmisObjectNotFoundException() {
         //ARRANGE
         when(credentials.getUser()).thenReturn("admin");
@@ -68,6 +69,7 @@ public class SessionGeneratorTest {
     }
 
     @Test
+    @DisplayName("Given incorrect user, when generate session, then throws CmisUnauthorizedException")
     public void givenIncorrectUser_whenGenerate_thenThrowsCmisUnauthorizedException() {
         //ARRANGE
         when(credentials.getUser()).thenReturn("incorrectUser");
@@ -80,6 +82,7 @@ public class SessionGeneratorTest {
     }
 
     @Test
+    @DisplayName("Given incorrect password, when generate session, then throws CmisUnauthorizedException")
     public void givenIncorrectPassword_whenGenerate_thenThrowsCmisUnauthorizedException() {
         //ARRANGE
         when(credentials.getUser()).thenReturn("admin");
@@ -92,6 +95,7 @@ public class SessionGeneratorTest {
     }
 
     @Test
+    @DisplayName("Given already existing session, when generate session, then returns session")
     public void givenAlreadyExistingSession_whenGenerate_thenReturnsSession() {
         //ARRANGE
         when(credentials.getUser()).thenReturn("admin");
