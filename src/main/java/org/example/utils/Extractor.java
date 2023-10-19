@@ -89,7 +89,6 @@ public class Extractor {
                 //Création d'un fichier JSON contenant les propriétés du fichier
                 generateMetadataFile(object, newFile);
 
-
                 //Insertion du contenu dans le fichier
                 InputStream inputStream = childDocument.getContentStream().getStream();
                 FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
@@ -113,7 +112,7 @@ public class Extractor {
         FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
         Files.setAttribute(file.toPath(),"creationTime",creationDateFileTime);
         file.setLastModified(lastModifDateMs);
-        log.info("Metadata file created for : " + file.getName());
+        log.info("attributes added to : " + file.getName());
     }
 
     public void generateMetadataFile(CmisObject object, File file) throws IOException {
@@ -149,8 +148,6 @@ public class Extractor {
         }
 
         jsonObject.put("properties", jsonArray);
-        log.info("Properties inserted in JSON File");
-
 
         JSONArray jsonArrayAce = new JSONArray();
 
@@ -167,13 +164,12 @@ public class Extractor {
             }
 
             jsonObject.put("permissions",jsonArrayAce);
-            log.info("Permissions inserted in JSON File");
         }
 
         FileWriter JsonFile = new FileWriter(file.getPath() + "_properties.json");
         JsonFile.write(jsonObject.toJSONString());
         JsonFile.flush();
-        log.info("JSON file created : " + file.getName() + "_properties.json");
+        log.info("Metadata file created : " + file.getName() + "_properties.json");
     }
 
 }

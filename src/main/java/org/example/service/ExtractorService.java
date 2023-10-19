@@ -42,7 +42,7 @@ public class ExtractorService {
         System.out.println("\n" + extractor.getCountExtractedFiles() + " files and " + extractor.getCountExtractedFolders() + " directories extracted successfully");
         System.out.println(extractor.getCountErrors() == 0 ?
                 "No errors detected" :
-                extractor.getCountErrors() + " files or directories couldn't be extracted"
+                extractor.getCountErrors() + " files or directories couldn't be extracted, please check logs"
         );
 
         System.out.println("\n\nPress enter to exit...\n\n");
