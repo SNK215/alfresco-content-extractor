@@ -60,7 +60,7 @@ public class Extractor {
                     //Ajout des attributs
                     addAttributesToFile(newDir, childFolder.getCreationDate().getTimeInMillis(), childFolder.getLastModificationDate().getTimeInMillis());
 
-                    //On extrait à nouveau les dossiers et fichiers enfants dans chaque dossier enfant
+                    //On extrait les dossiers et fichiers du dossier enfant
                     extractFiles(childFolder);
                     extractFolders(childFolder);
                 }
@@ -151,6 +151,7 @@ public class Extractor {
 
         JSONArray jsonArrayAce = new JSONArray();
 
+        //Ajout des ace (permissions) dans le fichier JSON
         if (object instanceof Document) {
 
             Document document = (Document) object;

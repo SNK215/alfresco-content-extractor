@@ -7,6 +7,9 @@ import lombok.extern.log4j.Log4j2;
 import java.io.*;
 import java.util.Properties;
 
+/**
+ * This class is used to retrieve and store some parameters that are needed in order for the extraction to take place
+ */
 @Getter
 @Setter
 @Log4j2

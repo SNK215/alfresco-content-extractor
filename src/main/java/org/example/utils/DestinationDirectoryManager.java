@@ -12,6 +12,13 @@ public class DestinationDirectoryManager {
     public DestinationDirectoryManager() {
     }
 
+    /**
+     * Method used to prepare the destination directory of the extraction.
+     * The destination directory is created if it doesn't exist, and is cleaned if it does exist.
+     * @param destinationDirectory where the extracted files will be created
+     * @throws IOException when the destination directory cannot be cleaned
+     *
+     */
     public void prepare(String destinationDirectory) throws IOException {
 
 

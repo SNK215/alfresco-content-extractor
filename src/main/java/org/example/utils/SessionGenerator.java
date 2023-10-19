@@ -23,12 +23,17 @@ import java.util.Map;
 @Log4j2
 @SuppressWarnings({"unused"})
 public class SessionGenerator {
+
     private Session session = null;
 
     public SessionGenerator() {
 
     }
 
+    /**
+     * @param credentials
+     * @return
+     */
     public Session generate(Credentials credentials) {
         try {
             if (session == null) {
