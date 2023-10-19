@@ -1,30 +1,31 @@
 package org.example.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.chemistry.opencmis.client.api.*;
+import org.apache.chemistry.opencmis.commons.data.Ace;
+import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.*;
+import org.example.model.Credentials;
+import org.json.simple.*;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
-import java.util.List;
 
-@SuppressWarnings({"unused"})
+@Getter
+@Setter
+@SuppressWarnings({"unused", "unchecked"})
 public class Extractor {
 
     private String targetPath;
     private String destinationFolder;
     private int countExtractedFiles;
-    private int countCreatedJson;
     private int countExtractedFolders;
     private int countErrors;
     private String tempPathError = "";
-    private JsonCreator jsonCreator = new JsonCreator();
-    protected static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
 
     public Extractor() {
@@ -55,18 +56,10 @@ public class Extractor {
                     tempPathError = newDir.getPath();
 
                     //Création d'un fichier JSON contenant les propriétés du fichier
-                    FileWriter JsonFile = new FileWriter(newDir.getPath() + "_properties.json");
-                    JsonFile.write(jsonCreator.convertDataToJSONObject(object));
-                    countCreatedJson++;
-                    JsonFile.flush();
-                    logger.info("JSON file created : " + newDir.getName() + "_properties.json");
+                    generateMetadataFile(object, newDir);
 
                     //Ajout des attributs
-                    long creationDateMs = object.getCreationDate().getTimeInMillis();
-                    FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
-                    Files.setAttribute(newDir.toPath(), "creationTime", creationDateFileTime);
-                    newDir.setLastModified(object.getLastModificationDate().getTimeInMillis());
-                    logger.info("Metadata added to directory : " + newDir.getName());
+                    addAttributesToFile(newDir, childFolder.getCreationDate().getTimeInMillis(), childFolder.getLastModificationDate().getTimeInMillis());
 
                     //On extrait à nouveau les dossiers et fichiers enfants dans chaque dossier enfant
                     extractFiles(childFolder);
@@ -76,7 +69,7 @@ public class Extractor {
         }
         catch (NullPointerException e) {
             countErrors++;
-            logger.error("Cannot extract directory/file : "  + tempPathError);
+            logger.error("Cannot extract directory : "  + tempPathError);
             for (StackTraceElement s : e.getStackTrace()) logger.error("StackTrace : " + s);
         }
     }
@@ -92,13 +85,9 @@ public class Extractor {
                 File newFile = new File(destinationFolder + childDocument.getPaths().get(0));
                 logger.info("File created : " + newFile.getPath());
 
-
                 //Création d'un fichier JSON contenant les propriétés du fichier
-                FileWriter JsonFile = new FileWriter(newFile.getPath() + "_properties.json");
-                JsonFile.write(jsonCreator.convertDataToJSONObject(object));
-                countCreatedJson++;
-                JsonFile.flush();
-                logger.info("JSON file created : " + newFile.getName() + "_properties.json");
+                generateMetadataFile(object, newFile);
+
 
                 //Insertion du contenu dans le fichier
                 InputStream inputStream = childDocument.getContentStream().getStream();
@@ -106,68 +95,84 @@ public class Extractor {
                 logger.info("Data stream inserted into file : " + newFile.getName());
 
                 //Ajout des attributs
-                long creationDateMs = childDocument.getCreationDate().getTimeInMillis();
-                FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
-                Files.setAttribute(newFile.toPath(),"creationTime",creationDateFileTime);
-                newFile.setLastModified(childDocument.getLastModificationDate().getTimeInMillis());
-                logger.info("Metadata added to file : " + newFile.getName());
+                addAttributesToFile(newFile, childDocument.getCreationDate().getTimeInMillis(), childDocument.getLastModificationDate().getTimeInMillis());
 
                 //Log de confirmation
                 if (newFile.exists()) {
                     countExtractedFiles++;
                 } else {
                     countErrors++;
-                    logger.error("Cannot extract directory/file : "  + newFile.getPath());
+                    logger.error("Cannot extract file : "  + newFile.getPath());
                 }
             }
         }
     }
 
-    public int getCountErrors() {
-        return countErrors;
+    public void addAttributesToFile(File file, long creationDateMs, long lastModifDateMs) throws IOException {
+        FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
+        Files.setAttribute(file.toPath(),"creationTime",creationDateFileTime);
+        file.setLastModified(lastModifDateMs);
+        logger.info("Metadata file created for : " + file.getName());
     }
 
-    public void setCountErrors(int countErrors) {
-        this.countErrors = countErrors;
+    public void generateMetadataFile(CmisObject object, File file) throws IOException {
+        Session session = new SessionGenerator().generate(Credentials.getInstance());
+        OperationContext oc = session.createOperationContext();
+        oc.setIncludeAcls(true);
+        oc.setIncludeRelationships(IncludeRelationships.BOTH);
+
+        //Insertion des propriétés dans un JSON
+        JSONObject jsonObject = new JSONObject();
+        JSONArray jsonArray = new JSONArray();
+
+        for (Property<?> property : object.getProperties()) {
+            JSONObject propertyObject = new JSONObject();
+            propertyObject.put("id", property.getId());
+            propertyObject.put("displayName", property.getDisplayName());
+            propertyObject.put("localName", property.getLocalName());
+            propertyObject.put("queryName", property.getQueryName());
+
+            //S'il n'y a pas de valeur pour la propriété, alors on insère un JSON vide
+            //Sinon on insère un tableau avec les valeurs, et on retire les [] qui sont insérés automatiquement
+            if (property.getValues().isEmpty()) {
+                propertyObject.put("values", new JSONObject());
+            } else {
+                JSONArray valuesArray = new JSONArray();
+                for (Object value : property.getValues()) {
+                    valuesArray.add(value.toString().replaceAll("\\[\\]",""));
+                }
+                propertyObject.put("values", valuesArray);
+            }
+
+            jsonArray.add(propertyObject);
+        }
+
+        jsonObject.put("properties", jsonArray);
+        logger.info("Properties inserted in JSON File");
+
+
+        JSONArray jsonArrayAce = new JSONArray();
+
+        if (object instanceof Document) {
+
+            Document document = (Document) object;
+
+            for (Ace ace : session.getObjectByPath(document.getPaths().get(0),oc).getAcl().getAces()) {
+                JSONObject jsonObjectAce = new JSONObject();
+                jsonObjectAce.put("principalId",ace.getPrincipalId());
+                jsonObjectAce.put("permission", ace.getPermissions().get(0));
+
+                jsonArrayAce.add(jsonObjectAce);
+            }
+
+            jsonObject.put("permissions",jsonArrayAce);
+            logger.info("Permissions inserted in JSON File");
+        }
+
+        FileWriter JsonFile = new FileWriter(file.getPath() + "_properties.json");
+        JsonFile.write(jsonObject.toJSONString());
+        JsonFile.flush();
+        logger.info("JSON file created : " + file.getName() + "_properties.json");
     }
 
-    public String getTargetPath() {
-        return targetPath;
-    }
-
-    public void setTargetPath(String targetPath) {
-        this.targetPath = targetPath;
-    }
-
-    public int getCountExtractedFiles() {
-        return countExtractedFiles;
-    }
-
-    public void setCountExtractedFiles(int countExtractedFiles) {
-        this.countExtractedFiles = countExtractedFiles;
-    }
-
-    public int getCountExtractedFolders() {
-        return countExtractedFolders;
-    }
-
-    public void setCountExtractedFolders(int countExtractedFolders) {
-        this.countExtractedFolders = countExtractedFolders;
-    }
-
-    public String getDestinationFolder() {
-        return destinationFolder;
-    }
-
-    public void setDestinationFolder(String destinationFolder) {
-        this.destinationFolder = destinationFolder;
-    }
-
-    public int getCountCreatedJson() {
-        return countCreatedJson;
-    }
-
-    public void setCountCreatedJson(int countCreatedJson) {
-        this.countCreatedJson = countCreatedJson;
-    }
 }

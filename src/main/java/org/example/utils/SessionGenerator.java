@@ -1,5 +1,7 @@
 package org.example.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.chemistry.opencmis.client.api.Repository;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.api.SessionFactory;
@@ -8,8 +10,7 @@ import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.*;
 import org.example.model.Credentials;
 
 
@@ -17,10 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Getter
+@Setter
 @SuppressWarnings({"unused"})
 public class SessionGenerator {
     private Session session = null;
-    //private Credentials credentials;
     private static final Logger logger = LogManager.getLogger();
 
     public SessionGenerator() {
@@ -54,13 +56,5 @@ public class SessionGenerator {
             throw new CmisUnauthorizedException();
         }
         return this.session;
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
     }
 }

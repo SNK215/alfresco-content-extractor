@@ -3,7 +3,7 @@ package utils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.example.utils.DirectoryManager;
+import org.example.utils.DestinationDirectoryManager;
 import org.junit.jupiter.api.*;
 
 import java.io.File;
@@ -16,8 +16,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
-public class DirectoryManagerTest {
-    private DirectoryManager directoryManager;
+public class DestinationDirectoryManagerTest {
+    private DestinationDirectoryManager destinationDirectoryManager;
     private String user;
     private String destinationDirectory;
     private String destinationFile;
@@ -26,8 +26,8 @@ public class DirectoryManagerTest {
 
     @BeforeEach
     public void setUp() {
-        Configurator.setLevel(LogManager.getLogger(DirectoryManager.class).getName(), Level.OFF);
-        directoryManager = new DirectoryManager();
+        Configurator.setLevel(LogManager.getLogger(DestinationDirectoryManager.class).getName(), Level.OFF);
+        destinationDirectoryManager = new DestinationDirectoryManager();
         user = System.getProperty("user.name");
         destinationDirectory = "C:\\Users\\" + user + "\\Desktop\\testDirectory";
         destinationFile = "C:\\Users\\" + user + "\\Desktop\\testDirectory\\testFile.txt";
@@ -38,7 +38,7 @@ public class DirectoryManagerTest {
     @DisplayName("When destination directory doesn't exist, then create it")
     public void whenGivenNotExistingDirectory_thenCreateIt() throws IOException {
         //ACT
-        directoryManager.prepareDestinationDirectory(destinationDirectory);
+        destinationDirectoryManager.prepare(destinationDirectory);
 
         //ASSERT
         assertThat(Files.exists(dirPath)).isTrue();
@@ -60,7 +60,7 @@ public class DirectoryManagerTest {
         }
 
         //ACT
-        directoryManager.prepareDestinationDirectory(destinationDirectory);
+        destinationDirectoryManager.prepare(destinationDirectory);
 
         //ASSERT
         //Retuns false if the directory is empty
@@ -79,6 +79,6 @@ public class DirectoryManagerTest {
 
         //ACT
         //ASSERT
-        assertThatThrownBy(()->directoryManager.prepareDestinationDirectory(destinationDirectory)).isInstanceOf(Exception.class);
+        assertThatThrownBy(()-> destinationDirectoryManager.prepare(destinationDirectory)).isInstanceOf(Exception.class);
     }
 }

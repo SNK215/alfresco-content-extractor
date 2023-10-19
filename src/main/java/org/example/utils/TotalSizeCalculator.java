@@ -13,10 +13,8 @@ import java.util.Scanner;
 public class TotalSizeCalculator {
     private long totalSize;
     private long availableDiskSpace;
-    private long fileCount;
-    private long folderCount;
     private String prefixMultipliers;
-    protected static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     public TotalSizeCalculator() {
         Session session = new SessionGenerator().generate(new Credentials());
@@ -63,17 +61,15 @@ public class TotalSizeCalculator {
             if (child instanceof Document) {
                 Document document = (Document) child;
                 calcSize += document.getContentStreamLength();
-                fileCount++;
             } else if (child instanceof Folder) {
                 Folder folder = (Folder) child;
                 calcSize += calculateTotalSizeAndCount(session, folder.getId());
-                folderCount++;
             }
         }
         return calcSize;
     }
     public void calculateAvailableDiskSpace() {
-        String partition = new Credentials().getDestinationDirectory().substring(0,2);
+        String partition = Credentials.getInstance().getDestinationDirectory().substring(0,2);
         logger.info("Chosen partition : " + partition);
         File file = new File(partition);
         availableDiskSpace = file.getFreeSpace();
@@ -97,13 +93,14 @@ public class TotalSizeCalculator {
     public String getUserChoice() {
         Scanner sc = new Scanner(System.in);
         System.out.println("YES : press [y]");
-        System.out.println("NO : press another key");
+        System.out.println("NO  : press another key");
         String choice = sc.nextLine().toLowerCase();
         if (!choice.equals("y")) {
             System.exit(0);
         }
         return choice;
     }
+
     public double sizeConverter(long numberToConvert) {
         double adaptedTotalSize = 0;
         if (numberToConvert < 1e3) {

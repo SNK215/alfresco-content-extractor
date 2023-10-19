@@ -1,65 +1,52 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.util.Properties;
 
+@Getter
+@Setter
 public class Credentials {
+
     private String user;
     private String password;
     private String serviceUrl;
     private String destinationDirectory;
     private static final Logger logger = LogManager.getLogger();
+    private static Credentials instance;
 
     public Credentials() {
+        init();
+    }
+
+    public void init() {
         File file  = new File("extractor_application.properties");
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
             Properties prop = new Properties();
             prop.load(input);
-            this.user = prop.getProperty("user");
-            this.password = prop.getProperty("password");
-            this.serviceUrl = prop.getProperty("serviceUrl");
-            this.destinationDirectory = prop.getProperty("destinationDirectory");
+            user = prop.getProperty("user");
+            password = prop.getProperty("password");
+            serviceUrl = prop.getProperty("serviceUrl");
+            destinationDirectory = prop.getProperty("destinationDirectory");
+            logger.info("Params retrieved from extractor_application.properties successfully");
         } catch (FileNotFoundException e) {
             logger.error("File " + file.getName() + " not found");
             throw new RuntimeException(e);
         } catch (IOException e) {
-            logger.error("Error retrieving login data, please verify and modify extractor_application file");
+            logger.error("Error retrieving login data, please verify and modify extractor_application.properties");
             throw new RuntimeException(e);
         }
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getServiceUrl() {
-        return serviceUrl;
-    }
-
-    public void setServiceUrl(String serviceUrl) {
-        this.serviceUrl = serviceUrl;
-    }
-
-    public String getDestinationDirectory() {
-        return destinationDirectory;
-    }
-
-    public void setDestinationDirectory(String destinationDirectory) {
-        this.destinationDirectory = destinationDirectory;
+    //Singleton
+    public static Credentials getInstance() {
+        if (instance == null) {
+            instance = new Credentials();
+        }
+        return instance;
     }
 }
