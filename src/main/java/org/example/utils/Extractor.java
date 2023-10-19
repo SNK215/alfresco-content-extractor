@@ -2,11 +2,11 @@ package org.example.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.*;
 import org.example.model.Credentials;
 import org.json.simple.*;
 
@@ -16,6 +16,7 @@ import java.nio.file.attribute.FileTime;
 
 @Getter
 @Setter
+@Log4j2
 @SuppressWarnings({"unused", "unchecked"})
 public class Extractor {
 
@@ -25,8 +26,6 @@ public class Extractor {
     private int countExtractedFolders;
     private int countErrors;
     private String tempPathError = "";
-    private static final Logger logger = LogManager.getLogger();
-
 
     public Extractor() {
     }
@@ -51,7 +50,7 @@ public class Extractor {
                     if (!newDir.exists()) {
                         newDir.mkdirs();
                         countExtractedFolders++;
-                        logger.info("Directory created : " + newDir.getPath());
+                        log.info("Directory created : " + newDir.getPath());
                     }
                     tempPathError = newDir.getPath();
 
@@ -69,8 +68,10 @@ public class Extractor {
         }
         catch (NullPointerException e) {
             countErrors++;
-            logger.error("Cannot extract directory : "  + tempPathError);
-            for (StackTraceElement s : e.getStackTrace()) logger.error("StackTrace : " + s);
+            log.error("Cannot extract directory : "  + tempPathError);
+            for (StackTraceElement s : e.getStackTrace()) {
+                log.error("StackTrace : " + s);
+            }
         }
     }
 
@@ -83,7 +84,7 @@ public class Extractor {
 
                 //Création du fichier
                 File newFile = new File(destinationFolder + childDocument.getPaths().get(0));
-                logger.info("File created : " + newFile.getPath());
+                log.info("File created : " + newFile.getPath());
 
                 //Création d'un fichier JSON contenant les propriétés du fichier
                 generateMetadataFile(object, newFile);
@@ -92,7 +93,7 @@ public class Extractor {
                 //Insertion du contenu dans le fichier
                 InputStream inputStream = childDocument.getContentStream().getStream();
                 FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
-                logger.info("Data stream inserted into file : " + newFile.getName());
+                log.info("Data stream inserted into file : " + newFile.getName());
 
                 //Ajout des attributs
                 addAttributesToFile(newFile, childDocument.getCreationDate().getTimeInMillis(), childDocument.getLastModificationDate().getTimeInMillis());
@@ -102,7 +103,7 @@ public class Extractor {
                     countExtractedFiles++;
                 } else {
                     countErrors++;
-                    logger.error("Cannot extract file : "  + newFile.getPath());
+                    log.error("Cannot extract file : "  + newFile.getPath());
                 }
             }
         }
@@ -112,7 +113,7 @@ public class Extractor {
         FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
         Files.setAttribute(file.toPath(),"creationTime",creationDateFileTime);
         file.setLastModified(lastModifDateMs);
-        logger.info("Metadata file created for : " + file.getName());
+        log.info("Metadata file created for : " + file.getName());
     }
 
     public void generateMetadataFile(CmisObject object, File file) throws IOException {
@@ -148,7 +149,7 @@ public class Extractor {
         }
 
         jsonObject.put("properties", jsonArray);
-        logger.info("Properties inserted in JSON File");
+        log.info("Properties inserted in JSON File");
 
 
         JSONArray jsonArrayAce = new JSONArray();
@@ -166,13 +167,13 @@ public class Extractor {
             }
 
             jsonObject.put("permissions",jsonArrayAce);
-            logger.info("Permissions inserted in JSON File");
+            log.info("Permissions inserted in JSON File");
         }
 
         FileWriter JsonFile = new FileWriter(file.getPath() + "_properties.json");
         JsonFile.write(jsonObject.toJSONString());
         JsonFile.flush();
-        logger.info("JSON file created : " + file.getName() + "_properties.json");
+        log.info("JSON file created : " + file.getName() + "_properties.json");
     }
 
 }

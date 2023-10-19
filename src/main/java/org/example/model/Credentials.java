@@ -2,21 +2,20 @@ package org.example.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
 import java.util.Properties;
 
 @Getter
 @Setter
+@Log4j2
 public class Credentials {
 
     private String user;
     private String password;
     private String serviceUrl;
     private String destinationDirectory;
-    private static final Logger logger = LogManager.getLogger();
     private static Credentials instance;
 
     public Credentials() {
@@ -32,12 +31,12 @@ public class Credentials {
             password = prop.getProperty("password");
             serviceUrl = prop.getProperty("serviceUrl");
             destinationDirectory = prop.getProperty("destinationDirectory");
-            logger.info("Params retrieved from extractor_application.properties successfully");
+            log.info("Params retrieved from extractor_application.properties successfully");
         } catch (FileNotFoundException e) {
-            logger.error("File " + file.getName() + " not found");
+            log.error("File " + file.getName() + " not found");
             throw new RuntimeException(e);
         } catch (IOException e) {
-            logger.error("Error retrieving login data, please verify and modify extractor_application.properties");
+            log.error("Error retrieving login data, please verify and modify extractor_application.properties");
             throw new RuntimeException(e);
         }
     }

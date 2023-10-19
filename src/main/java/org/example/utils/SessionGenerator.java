@@ -2,6 +2,7 @@ package org.example.utils;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.apache.chemistry.opencmis.client.api.Repository;
 import org.apache.chemistry.opencmis.client.api.Session;
 import org.apache.chemistry.opencmis.client.api.SessionFactory;
@@ -10,7 +11,6 @@ import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
-import org.apache.logging.log4j.*;
 import org.example.model.Credentials;
 
 
@@ -20,10 +20,10 @@ import java.util.Map;
 
 @Getter
 @Setter
+@Log4j2
 @SuppressWarnings({"unused"})
 public class SessionGenerator {
     private Session session = null;
-    private static final Logger logger = LogManager.getLogger();
 
     public SessionGenerator() {
 
@@ -48,11 +48,11 @@ public class SessionGenerator {
             }
         }
         catch (CmisObjectNotFoundException e) {
-            logger.error("Incorrect serviceUrl, please change it and restart the app (" + credentials.getServiceUrl() + ")");
+            log.error("Incorrect serviceUrl, please change it and restart the app (" + credentials.getServiceUrl() + ")");
             throw new CmisObjectNotFoundException();
         }
         catch (CmisUnauthorizedException e) {
-            logger.error("Incorrect username or password, please change it and restart the app");
+            log.error("Incorrect username or password, please change it and restart the app");
             throw new CmisUnauthorizedException();
         }
         return this.session;

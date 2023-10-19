@@ -1,9 +1,9 @@
 package org.example.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
 import org.example.model.Credentials;
 import org.example.utils.DestinationDirectoryManager;
 import org.example.utils.Extractor;
@@ -11,12 +11,11 @@ import org.example.utils.SessionGenerator;
 import org.example.utils.TotalSizeCalculator;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+@Log4j2
 public class ExtractorService {
-    private static final Logger logger = LogManager.getLogger();
 
     public ExtractorService() {
     }
@@ -35,8 +34,8 @@ public class ExtractorService {
         Session session = sessionGenerator.generate(credentials);
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
 
-        logger.info("Connected to Alfresco through " + credentials.getServiceUrl());
-        logger.warn("Extraction started");
+        log.info("Connected to Alfresco through " + credentials.getServiceUrl());
+        log.warn("Extraction started");
 
         extractor.extractFolders(alfrescoRootFolder);
 

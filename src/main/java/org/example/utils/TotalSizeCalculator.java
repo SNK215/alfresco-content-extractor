@@ -1,20 +1,19 @@
 package org.example.utils;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.model.Credentials;
 
 import java.io.File;
 import java.util.Scanner;
 
+@Log4j2
 public class TotalSizeCalculator {
     private long totalSize;
     private long availableDiskSpace;
     private String prefixMultipliers;
-    private static final Logger logger = LogManager.getLogger();
 
     public TotalSizeCalculator() {
         Session session = new SessionGenerator().generate(new Credentials());
@@ -23,7 +22,7 @@ public class TotalSizeCalculator {
             totalSize = calculateTotalSizeAndCount(session, rootId);
             startPermission();
         } else {
-            logger.error("Root folder not found");
+            log.error("Root folder not found");
         }
     }
 
@@ -52,7 +51,7 @@ public class TotalSizeCalculator {
         try {
             rootFolder = (Folder) session.getObject(rootId);
         } catch (CmisObjectNotFoundException e) {
-            logger.error("Root folder not found"+ e.getMessage());
+            log.error("Root folder not found"+ e.getMessage());
             return 0;
         }
         long calcSize = 0;
@@ -70,22 +69,22 @@ public class TotalSizeCalculator {
     }
     public void calculateAvailableDiskSpace() {
         String partition = Credentials.getInstance().getDestinationDirectory().substring(0,2);
-        logger.info("Chosen partition : " + partition);
+        log.info("Chosen partition : " + partition);
         File file = new File(partition);
         availableDiskSpace = file.getFreeSpace();
     }
     public void startPermission(){
         calculateAvailableDiskSpace();
         if (totalSize >= availableDiskSpace) {
-            logger.warn("Insufficient memory. Available: " + availableDiskSpace + " bytes(" + sizeConverter(availableDiskSpace) + " " + prefixMultipliers+ "). Minimum expected: " + totalSize + " bytes("+ sizeConverter(totalSize) + " " + prefixMultipliers +").");
+            log.error("Insufficient memory. Available: " + availableDiskSpace + " bytes(" + sizeConverter(availableDiskSpace) + " " + prefixMultipliers+ "). Minimum expected: " + totalSize + " bytes("+ sizeConverter(totalSize) + " " + prefixMultipliers +").");
             System.out.println("Not enough memory space on your disk, please free up some space or change destination directory.");
             System.out.println("Do you want to restart ?");
             if (getUserChoice().equals("y")){
                 startPermission();
             }
         } else {
-            logger.info("Available space on chosen partition : " + sizeConverter(availableDiskSpace) + " " + prefixMultipliers +".");
-            logger.info("Total size of folders and files to extract : " + sizeConverter(totalSize) + " " + prefixMultipliers +".");
+            log.info("Available space on chosen partition : " + sizeConverter(availableDiskSpace) + " " + prefixMultipliers +".");
+            log.info("Total size of folders and files to extract : " + sizeConverter(totalSize) + " " + prefixMultipliers +".");
             System.out.println("Do you want to start extracting ?");
             getUserChoice();
         }

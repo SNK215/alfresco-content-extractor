@@ -1,15 +1,13 @@
 package org.example.utils;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 
-
+@Log4j2
 public class DestinationDirectoryManager {
-
-    private static final Logger logger = LogManager.getLogger();
 
     public DestinationDirectoryManager() {
     }
@@ -24,13 +22,13 @@ public class DestinationDirectoryManager {
         if (!Files.exists(directoryPath)) {
 
             directory.mkdir();
-            logger.warn("Destination directory created at " + destinationDirectory);
+            log.warn("Destination directory created at " + destinationDirectory);
 
         //Sinon on vide le contenu du dossier
         } else {
 
             FileUtils.cleanDirectory(directory);
-            logger.warn("Destination directory cleaned at " + destinationDirectory);
+            log.warn("Destination directory cleaned at " + destinationDirectory);
 
         }
 
