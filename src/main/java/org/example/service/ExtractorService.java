@@ -27,7 +27,7 @@ public class ExtractorService {
      */
     public void startExtraction() throws IOException {
         Credentials credentials = new Credentials();
-        new SizeCalculator();
+        new SizeCalculator().getSizesAndPrefixMultipliers();
         String destinationDirectory = credentials.getDestinationDirectory();
         SessionGenerator sessionGenerator = new SessionGenerator();
         DestinationDirectoryManager destinationDirectoryManager = new DestinationDirectoryManager();
