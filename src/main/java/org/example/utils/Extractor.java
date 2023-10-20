@@ -79,7 +79,7 @@ public class Extractor {
                     }
                     tempPathError = newDir.getPath();
 
-                    generateMetadataFile(object, newDir.getName());
+                    generateMetadataFile(object, newDir);
 
                     addAttributesToFile(newDir, childFolder.getCreationDate().getTimeInMillis(), childFolder.getLastModificationDate().getTimeInMillis());
 
@@ -115,7 +115,7 @@ public class Extractor {
                 File newFile = new File(destinationFolder + childDocument.getPaths().get(0));
                 log.info("File created : " + newFile.getPath());
 
-                generateMetadataFile(object, newFile.getName());
+                generateMetadataFile(object, newFile);
 
                 //Inserting content into the new file
                 InputStream inputStream = childDocument.getContentStream().getStream();
@@ -150,10 +150,10 @@ public class Extractor {
 
     /**
      * @param object CmisObject from which the metadata will be extracted
-     * @param filename Used for the name of the metadata file (name : filename_properties.json)
+     * @param file Used the get the file path and create the metadata file at the correct location
      * @throws IOException in case there is a problem with local file creation
      */
-    public void generateMetadataFile(CmisObject object, String filename) throws IOException {
+    public void generateMetadataFile(CmisObject object, File file) throws IOException {
 
         //Generating a new session in order to get the ACLs (permissions)
         Session session = new SessionGenerator().generate(Credentials.getInstance());
@@ -189,7 +189,7 @@ public class Extractor {
         jsonObject.put("properties", jsonArray);
 
         //Inserting Aces/Acls (permissions) in the JSON file
-        
+
         JSONArray jsonArrayAce = new JSONArray();
 
         if (object instanceof Document) {
@@ -208,11 +208,11 @@ public class Extractor {
         }
 
         //Local file creation
-        FileWriter JsonFile = new FileWriter(filename + "_properties.json");
+        FileWriter JsonFile = new FileWriter(file.getPath() + "_properties.json");
         JsonFile.write(jsonObject.toJSONString());
         JsonFile.flush();
 
-        log.info("Metadata file created : " + filename + "_properties.json");
+        log.info("Metadata file created : " + file.getPath() + "_properties.json");
     }
 
 }
