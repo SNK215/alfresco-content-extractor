@@ -25,21 +25,17 @@ public class DestinationDirectoryManager {
         Path directoryPath = Paths.get(destinationDirectory);
         File directory = new File(destinationDirectory);
 
-        //Si le dossier de destination n'existe pas, alors on le crée
         if (!Files.exists(directoryPath)) {
 
             directory.mkdir();
             log.warn("Destination directory created at " + destinationDirectory);
 
-        //Sinon on vide le contenu du dossier
         } else {
 
             FileUtils.cleanDirectory(directory);
             log.warn("Destination directory cleaned at " + destinationDirectory);
 
         }
-
     }
-
 
 }

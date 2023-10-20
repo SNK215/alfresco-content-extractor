@@ -14,25 +14,33 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
 @Log4j2
 public class ExtractorService {
 
     public ExtractorService() {
     }
 
+    /**
+     * Call all the classes that are necessary to extract the Alfresco repository successfully
+     * @throws IOException in case there is a problem with local file manipulation
+     */
     public void startExtraction() throws IOException {
         Credentials credentials = new Credentials();
         new TotalSizeCalculator();
         String destinationDirectory = credentials.getDestinationDirectory();
         SessionGenerator sessionGenerator = new SessionGenerator();
         DestinationDirectoryManager destinationDirectoryManager = new DestinationDirectoryManager();
-        String targetPath = "/";
-        Extractor extractor = new Extractor(targetPath, destinationDirectory);
+
+        // "/" means the root of the Alfresco repository
+        Extractor extractor = new Extractor("/", destinationDirectory);
 
         destinationDirectoryManager.prepare(destinationDirectory);
 
         Session session = sessionGenerator.generate(credentials);
-        Folder alfrescoRootFolder = (Folder) session.getObjectByPath(targetPath);
+
+        // "/" means the root of the Alfresco repository
+        Folder alfrescoRootFolder = (Folder) session.getObjectByPath("/");
 
         log.info("Connected to Alfresco through " + credentials.getServiceUrl());
         log.warn("Extraction started");
@@ -40,6 +48,7 @@ public class ExtractorService {
         extractor.extractFolders(alfrescoRootFolder);
 
         System.out.println("\n" + extractor.getCountExtractedFiles() + " files and " + extractor.getCountExtractedFolders() + " directories extracted successfully");
+
         System.out.println(extractor.getCountErrors() == 0 ?
                 "No errors detected" :
                 extractor.getCountErrors() + " files or directories couldn't be extracted, please check logs"
@@ -47,6 +56,7 @@ public class ExtractorService {
 
         System.out.println("\n\nPress enter to exit...\n\n");
 
+        //Reads user input
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         in.readLine();
     }

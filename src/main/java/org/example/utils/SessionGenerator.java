@@ -31,8 +31,9 @@ public class SessionGenerator {
     }
 
     /**
-     * @param credentials
-     * @return
+     * Takes data from a credentials object to create a new Alfresco session
+     * @param credentials (credentials class takes data from extractor_application.properties)
+     * @return Alfresco session
      */
     public Session generate(Credentials credentials) {
         try {

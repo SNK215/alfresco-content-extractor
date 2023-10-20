@@ -8,23 +8,46 @@ import java.io.*;
 import java.util.Properties;
 
 /**
- * This class is used to retrieve and store some parameters that are needed in order for the extraction to take place
+ * Class used to retrieve and store some parameters that are needed in order for the extraction to take place. Singleton design pattern is applied
  */
 @Getter
 @Setter
 @Log4j2
 public class Credentials {
 
+    /**
+     * Alfresco admin username
+     */
     private String user;
+
+    /**
+     * Alfresco admin password
+     */
     private String password;
+
+    /**
+     * service URL of an Alfresco repository
+     */
     private String serviceUrl;
+
+    /**
+     * Directory where the files and folders will be imported
+     */
     private String destinationDirectory;
+
+    /**
+     * Attribute used to applies the design pattern Singleton to the class
+     */
     private static Credentials instance;
 
     public Credentials() {
         init();
     }
 
+
+    /**
+     *  Data is recovered from extractor_application.properties and stored in an instance of the class
+     */
     public void init() {
         File file  = new File("extractor_application.properties");
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
@@ -44,7 +67,10 @@ public class Credentials {
         }
     }
 
-    //Singleton
+
+    /**
+     * @return instance of the Credentials class
+     */
     public static Credentials getInstance() {
         if (instance == null) {
             instance = new Credentials();
