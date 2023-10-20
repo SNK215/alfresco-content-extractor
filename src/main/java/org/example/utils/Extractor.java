@@ -14,38 +14,63 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.attribute.FileTime;
 
+/**
+ * Class that will extract the content of the Alfresco repository and inject it on the users device
+ */
 @Getter
 @Setter
 @Log4j2
 @SuppressWarnings({"unused", "unchecked"})
 public class Extractor {
 
-    private String targetPath;
+    /**
+     * Where the extracted data will be injected
+     */
     private String destinationFolder;
+
+    /**
+     * Counts the number of extracted files
+     */
     private int countExtractedFiles;
+
+    /**
+     * Counts the number of extracted folders
+     */
     private int countExtractedFolders;
+
+    /**
+     * Counts the number of files/folders that couldn't be extracted
+     */
     private int countErrors;
+
+    /**
+     * Stores the path of the current file/folder being extracted, in order to log it in case an error occurs
+     */
     private String tempPathError = "";
 
-    public Extractor() {
-    }
 
-    public Extractor(String targetPath, String destinationFolder) {
-        this.targetPath = targetPath;
+    public Extractor(String destinationFolder) {
         this.destinationFolder = destinationFolder;
     }
 
+    /**
+     * Extracts all subfolders from a parent folder
+     * @param folder parent folder
+     * @throws IOException in case there is a problem with local folder creation
+     */
     public void extractFolders(Folder folder) throws IOException {
         try {
-            //Extraction des fichiers situés dans le Folder qui est fourni en paramètre
+
             extractFiles(folder);
 
             for (CmisObject object : folder.getChildren()) {
+
                 if (object instanceof Folder) {
-                    //Objet CmisObject converti en object Folder
+
+                    //Mapping CmisObject to Folder in order to have access to specific methods
                     Folder childFolder = (Folder) object;
 
-                    //Création du dossier
+                    //Local folder creation
                     File newDir = new File(destinationFolder + "/" + childFolder.getPath());
                     if (!newDir.exists()) {
                         newDir.mkdirs();
@@ -54,13 +79,10 @@ public class Extractor {
                     }
                     tempPathError = newDir.getPath();
 
-                    //Création d'un fichier JSON contenant les propriétés du fichier
-                    generateMetadataFile(object, newDir);
+                    generateMetadataFile(object, newDir.getName());
 
-                    //Ajout des attributs
                     addAttributesToFile(newDir, childFolder.getCreationDate().getTimeInMillis(), childFolder.getLastModificationDate().getTimeInMillis());
 
-                    //On extrait les dossiers et fichiers du dossier enfant
                     extractFiles(childFolder);
                     extractFolders(childFolder);
                 }
@@ -75,29 +97,33 @@ public class Extractor {
         }
     }
 
+    /**
+     * Extracts all files from a parent folder
+     * @param folder parent folder
+     * @throws IOException in case there is a problem with local file creation
+     */
     public void extractFiles(Folder folder) throws IOException {
-        //On itère sur chaque enfant dans le dossier qui est fourni en paramètre
+
         for (CmisObject object : folder.getChildren()) {
+
             if (object instanceof Document) {
-                //Object CmisObject converti en object Document
+
+                //Mapping CmisObject to Document in order to have access to specific methods
                 Document childDocument = (Document) object;
 
-                //Création du fichier
+                //Local file creation
                 File newFile = new File(destinationFolder + childDocument.getPaths().get(0));
                 log.info("File created : " + newFile.getPath());
 
-                //Création d'un fichier JSON contenant les propriétés du fichier
-                generateMetadataFile(object, newFile);
+                generateMetadataFile(object, newFile.getName());
 
-                //Insertion du contenu dans le fichier
+                //Inserting content into the new file
                 InputStream inputStream = childDocument.getContentStream().getStream();
                 FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
                 log.info("Data stream inserted into file : " + newFile.getName());
 
-                //Ajout des attributs
                 addAttributesToFile(newFile, childDocument.getCreationDate().getTimeInMillis(), childDocument.getLastModificationDate().getTimeInMillis());
 
-                //Log de confirmation
                 if (newFile.exists()) {
                     countExtractedFiles++;
                 } else {
@@ -108,6 +134,13 @@ public class Extractor {
         }
     }
 
+    /**
+     * Method that adds attributes to a given file
+     * @param file file that needs its attributes to be modified
+     * @param creationDateMs creation date in milliseconds
+     * @param lastModifDateMs last modification date in milliseconds
+     * @throws IOException in case there is a problem with local file manipulation
+     */
     public void addAttributesToFile(File file, long creationDateMs, long lastModifDateMs) throws IOException {
         FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
         Files.setAttribute(file.toPath(),"creationTime",creationDateFileTime);
@@ -115,16 +148,23 @@ public class Extractor {
         log.info("attributes added to : " + file.getName());
     }
 
-    public void generateMetadataFile(CmisObject object, File file) throws IOException {
+    /**
+     * @param object CmisObject from which the metadata will be extracted
+     * @param filename Used for the name of the metadata file (name : filename_properties.json)
+     * @throws IOException in case there is a problem with local file creation
+     */
+    public void generateMetadataFile(CmisObject object, String filename) throws IOException {
+
+        //Generating a new session in order to get the ACLs (permissions)
         Session session = new SessionGenerator().generate(Credentials.getInstance());
         OperationContext oc = session.createOperationContext();
         oc.setIncludeAcls(true);
         oc.setIncludeRelationships(IncludeRelationships.BOTH);
 
-        //Insertion des propriétés dans un JSON
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
+        //Creating a new JSON entry for each property of the CmisObject
         for (Property<?> property : object.getProperties()) {
             JSONObject propertyObject = new JSONObject();
             propertyObject.put("id", property.getId());
@@ -132,8 +172,7 @@ public class Extractor {
             propertyObject.put("localName", property.getLocalName());
             propertyObject.put("queryName", property.getQueryName());
 
-            //S'il n'y a pas de valeur pour la propriété, alors on insère un JSON vide
-            //Sinon on insère un tableau avec les valeurs, et on retire les [] qui sont insérés automatiquement
+            //Creating empty Json object if there is no value for a property, and replacing the "[]" that are automatically inserted
             if (property.getValues().isEmpty()) {
                 propertyObject.put("values", new JSONObject());
             } else {
@@ -149,9 +188,10 @@ public class Extractor {
 
         jsonObject.put("properties", jsonArray);
 
+        //Inserting Aces/Acls (permissions) in the JSON file
+        
         JSONArray jsonArrayAce = new JSONArray();
 
-        //Ajout des ace (permissions) dans le fichier JSON
         if (object instanceof Document) {
 
             Document document = (Document) object;
@@ -167,10 +207,12 @@ public class Extractor {
             jsonObject.put("permissions",jsonArrayAce);
         }
 
-        FileWriter JsonFile = new FileWriter(file.getPath() + "_properties.json");
+        //Local file creation
+        FileWriter JsonFile = new FileWriter(filename + "_properties.json");
         JsonFile.write(jsonObject.toJSONString());
         JsonFile.flush();
-        log.info("Metadata file created : " + file.getName() + "_properties.json");
+
+        log.info("Metadata file created : " + filename + "_properties.json");
     }
 
 }

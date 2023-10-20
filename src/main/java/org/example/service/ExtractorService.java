@@ -33,7 +33,7 @@ public class ExtractorService {
         DestinationDirectoryManager destinationDirectoryManager = new DestinationDirectoryManager();
 
         // "/" means the root of the Alfresco repository
-        Extractor extractor = new Extractor("/", destinationDirectory);
+        Extractor extractor = new Extractor(destinationDirectory);
 
         destinationDirectoryManager.prepare(destinationDirectory);
 
