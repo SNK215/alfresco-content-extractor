@@ -8,7 +8,7 @@ import org.example.model.Credentials;
 import org.example.utils.DestinationDirectoryManager;
 import org.example.utils.Extractor;
 import org.example.utils.SessionGenerator;
-import org.example.utils.TotalSizeCalculator;
+import org.example.utils.SizeCalculator;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +27,7 @@ public class ExtractorService {
      */
     public void startExtraction() throws IOException {
         Credentials credentials = new Credentials();
-        new TotalSizeCalculator();
+        new SizeCalculator();
         String destinationDirectory = credentials.getDestinationDirectory();
         SessionGenerator sessionGenerator = new SessionGenerator();
         DestinationDirectoryManager destinationDirectoryManager = new DestinationDirectoryManager();
