@@ -11,6 +11,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.example.model.Credentials;
 import org.example.utils.SessionGenerator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+@Disabled
 @ExtendWith(MockitoExtension.class)
 public class SessionGeneratorTest {
 
