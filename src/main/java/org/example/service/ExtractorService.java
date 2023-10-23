@@ -32,14 +32,13 @@ public class ExtractorService {
         SessionGenerator sessionGenerator = new SessionGenerator();
         DestinationDirectoryManager destinationDirectoryManager = new DestinationDirectoryManager();
 
-        // "/" means the root of the Alfresco repository
         Extractor extractor = new Extractor(destinationDirectory);
 
         destinationDirectoryManager.prepare(destinationDirectory);
 
         Session session = sessionGenerator.generate(credentials);
 
-        // "/" means the root of the Alfresco repository
+        // "/" refers to the root of the Alfresco repository
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath("/");
 
         log.info("Connected to Alfresco through " + credentials.getServiceUrl());
