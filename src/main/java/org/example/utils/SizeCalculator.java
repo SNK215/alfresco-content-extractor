@@ -18,7 +18,7 @@ public class SizeCalculator {
 
     }
     public void getSizesAndPrefixMultipliers() {
-        Session session = new SessionGenerator().generate(new Credentials());
+        Session session = new SessionGenerator().generate(Credentials.getInstance());
         String rootId = findRootNodeId(session);
         if (rootId!=null) {
             long extractionSize = calculateExtractionSize(session, rootId);

@@ -11,12 +11,6 @@ import java.util.Scanner;
 public class IHM {
     /**
      * Tells the user if he has enough free space on his computer
-     * @param extractionSize
-     * @param convertExtractionSize
-     * @param extractionSizePrefixMultiplier
-     * @param availableDiskSpace
-     * @param convertAvailableDiskSpace
-     * @param availableDiskSpacePrefixMultiplier
      */
     public void startPermission(long extractionSize, double convertExtractionSize, String extractionSizePrefixMultiplier, long availableDiskSpace, double convertAvailableDiskSpace, String availableDiskSpacePrefixMultiplier){
         if (extractionSize >= availableDiskSpace) {
@@ -40,7 +34,7 @@ public class IHM {
     public String getUserChoice() {
         Scanner sc = new Scanner(System.in);
         System.out.println("YES : press [y]");
-        System.out.println("NO  : press another key");
+        System.out.println("NO  : press [n]");
         String choice = sc.nextLine().toLowerCase();
         if (!choice.equals("y")) {
             System.exit(0);

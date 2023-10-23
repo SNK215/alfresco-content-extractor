@@ -15,6 +15,15 @@
     </properties>
 
     <dependencies>
+
+        <!-- https://mvnrepository.com/artifact/com.github.stefanbirkner/system-lambda -->
+        <dependency>
+            <groupId>com.github.stefanbirkner</groupId>
+            <artifactId>system-lambda</artifactId>
+            <version>1.2.1</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
