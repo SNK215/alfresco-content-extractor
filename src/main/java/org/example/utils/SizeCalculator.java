@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Log4j2
 public class SizeCalculator {
 
@@ -27,6 +28,11 @@ public class SizeCalculator {
             log.error("Root folder not found");
         }
     }
+
+    /**
+     * @param session Alfresco session that was generated through SessionGenerator Class
+     * @return NodeId of the Alfresco repository
+     */
     public String findRootNodeId (Session session) {
         Folder rootFolder = session.getRootFolder();
         String rootNodeId = rootFolder.getId();
@@ -47,6 +53,12 @@ public class SizeCalculator {
         }
         return null;
     }
+
+    /**
+     * @param session Alfresco session that was generated through SessionGenerator Class
+     * @param rootId nodeId of the Alfresco repository
+     * @return Total size of the Alfresco repository to extract
+     */
     public long calculateExtractionSize(Session session, String rootId) {
         Folder rootFolder;
         try {
@@ -68,6 +80,10 @@ public class SizeCalculator {
         }
         return calcSize;
     }
+
+    /**
+     * @return Amount of free space on the users partition. Partition is defined in extractor_application.properties
+     */
     public long calculateAvailableDiskSpace() {
         String partition = Credentials.getInstance().getDestinationDirectory().substring(0,2);
         log.info("Chosen partition : " + partition);
@@ -75,6 +91,10 @@ public class SizeCalculator {
         return file.getFreeSpace();
     }
 
+    /**
+     * @param numberToConvert
+     * @return A file/partition size and its prefix (Mb / Gb / Tb)
+     */
     public List<Object> sizeConverter(long numberToConvert) {
         double adaptedTotalSize = 0;
         String prefixMultipliers;
@@ -84,16 +104,16 @@ public class SizeCalculator {
             prefixMultipliers = "bytes";
         } else if (numberToConvert < 1e6) {
             adaptedTotalSize = (double) numberToConvert / 1e3;
-            prefixMultipliers = "KB";
+            prefixMultipliers = "Kb";
         } else if (numberToConvert < 1e9) {
             adaptedTotalSize = (double) numberToConvert / 1e6;
-            prefixMultipliers = "MB";
+            prefixMultipliers = "Mb";
         } else if (numberToConvert < 1e12) {
             adaptedTotalSize = (double) numberToConvert / 1e9;
-            prefixMultipliers = "GB";
+            prefixMultipliers = "Gb";
         } else {
             adaptedTotalSize = (double) numberToConvert / 1e12;
-            prefixMultipliers = "TB";
+            prefixMultipliers = "Tb";
         }
         convertedSize.add(Math.round(adaptedTotalSize*100.0)/100.0);
         convertedSize.add(prefixMultipliers);

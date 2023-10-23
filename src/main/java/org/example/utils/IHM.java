@@ -3,8 +3,21 @@ package org.example.utils;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.Scanner;
+
+/**
+ * (Human Machine Interface) In this class are methods that allows the app to communicate with the user
+ */
 @Log4j2
 public class IHM {
+    /**
+     * Tells the user if he has enough free space on his computer
+     * @param extractionSize
+     * @param convertExtractionSize
+     * @param extractionSizePrefixMultiplier
+     * @param availableDiskSpace
+     * @param convertAvailableDiskSpace
+     * @param availableDiskSpacePrefixMultiplier
+     */
     public void startPermission(long extractionSize, double convertExtractionSize, String extractionSizePrefixMultiplier, long availableDiskSpace, double convertAvailableDiskSpace, String availableDiskSpacePrefixMultiplier){
         if (extractionSize >= availableDiskSpace) {
             log.error("Insufficient memory. Available: " + availableDiskSpace + " bytes(" + convertAvailableDiskSpace + " " + availableDiskSpacePrefixMultiplier + "). Minimum expected: " + extractionSize + " bytes("+ convertExtractionSize + " " + extractionSizePrefixMultiplier +").");
@@ -20,6 +33,10 @@ public class IHM {
             getUserChoice();
         }
     }
+
+    /**
+     * @return Asks the user if he wants to proceed with the extraction
+     */
     public String getUserChoice() {
         Scanner sc = new Scanner(System.in);
         System.out.println("YES : press [y]");
