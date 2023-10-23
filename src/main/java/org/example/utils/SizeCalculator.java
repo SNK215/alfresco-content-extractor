@@ -7,25 +7,26 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundExcept
 import org.example.model.Credentials;
 
 import java.io.File;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 @Log4j2
-public class TotalSizeCalculator {
-    private long totalSize;
-    private long availableDiskSpace;
-    private String prefixMultipliers;
+public class SizeCalculator {
 
-    public TotalSizeCalculator() {
+    public SizeCalculator() {
+
+    }
+    public void getSizesAndPrefixMultipliers() {
         Session session = new SessionGenerator().generate(new Credentials());
         String rootId = findRootNodeId(session);
         if (rootId!=null) {
-            totalSize = calculateTotalSizeAndCount(session, rootId);
-            startPermission();
+            long extractionSize = calculateExtractionSize(session, rootId);
+            long availableDiskSpace = calculateAvailableDiskSpace();
+            new IHM().startPermission(extractionSize, (Double) sizeConverter(extractionSize).get(0), (String) sizeConverter(extractionSize).get(1), calculateAvailableDiskSpace(), (Double) sizeConverter(availableDiskSpace).get(0), (String) sizeConverter(availableDiskSpace).get(1));
         } else {
             log.error("Root folder not found");
         }
     }
-
     public String findRootNodeId (Session session) {
         Folder rootFolder = session.getRootFolder();
         String rootNodeId = rootFolder.getId();
@@ -46,7 +47,7 @@ public class TotalSizeCalculator {
         }
         return null;
     }
-    public long calculateTotalSizeAndCount(Session session, String rootId) {
+    public long calculateExtractionSize(Session session, String rootId) {
         Folder rootFolder;
         try {
             rootFolder = (Folder) session.getObject(rootId);
@@ -62,46 +63,22 @@ public class TotalSizeCalculator {
                 calcSize += document.getContentStreamLength();
             } else if (child instanceof Folder) {
                 Folder folder = (Folder) child;
-                calcSize += calculateTotalSizeAndCount(session, folder.getId());
+                calcSize += calculateExtractionSize(session, folder.getId());
             }
         }
         return calcSize;
     }
-    public void calculateAvailableDiskSpace() {
+    public long calculateAvailableDiskSpace() {
         String partition = Credentials.getInstance().getDestinationDirectory().substring(0,2);
         log.info("Chosen partition : " + partition);
         File file = new File(partition);
-        availableDiskSpace = file.getFreeSpace();
-    }
-    public void startPermission(){
-        calculateAvailableDiskSpace();
-        if (totalSize >= availableDiskSpace) {
-            log.error("Insufficient memory. Available: " + availableDiskSpace + " bytes(" + sizeConverter(availableDiskSpace) + " " + prefixMultipliers+ "). Minimum expected: " + totalSize + " bytes("+ sizeConverter(totalSize) + " " + prefixMultipliers +").");
-            System.out.println("Not enough memory space on your disk, please free up some space or change destination directory.");
-            System.out.println("Do you want to restart ?");
-            if (getUserChoice().equals("y")){
-                startPermission();
-            }
-        } else {
-            log.info("Available space on chosen partition : " + sizeConverter(availableDiskSpace) + " " + prefixMultipliers +".");
-            log.info("Total size of folders and files to extract : " + sizeConverter(totalSize) + " " + prefixMultipliers +".");
-            System.out.println("Do you want to start extracting ?");
-            getUserChoice();
-        }
-    }
-    public String getUserChoice() {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("YES : press [y]");
-        System.out.println("NO  : press another key");
-        String choice = sc.nextLine().toLowerCase();
-        if (!choice.equals("y")) {
-            System.exit(0);
-        }
-        return choice;
+        return file.getFreeSpace();
     }
 
-    public double sizeConverter(long numberToConvert) {
+    public List<Object> sizeConverter(long numberToConvert) {
         double adaptedTotalSize = 0;
+        String prefixMultipliers;
+        List<Object> convertedSize = new ArrayList<>();
         if (numberToConvert < 1e3) {
             adaptedTotalSize = numberToConvert;
             prefixMultipliers = "bytes";
@@ -118,6 +95,8 @@ public class TotalSizeCalculator {
             adaptedTotalSize = (double) numberToConvert / 1e12;
             prefixMultipliers = "TB";
         }
-        return Math.round(adaptedTotalSize*100.0)/100.0;
+        convertedSize.add(Math.round(adaptedTotalSize*100.0)/100.0);
+        convertedSize.add(prefixMultipliers);
+        return convertedSize;
     }
 }
