@@ -36,7 +36,7 @@ public class Credentials {
     private String destinationDirectory;
 
     /**
-     * Attribute used to applies the design pattern Singleton to the class
+     * Instance of the class
      */
     private static Credentials instance;
 

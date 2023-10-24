@@ -79,8 +79,10 @@ public class Extractor {
                     }
                     tempPathError = newDir.getPath();
 
+                    //Generating metadata file
                     generateMetadataFile(object, newDir);
 
+                    //Adding attributes to file
                     addAttributesToFile(newDir, childFolder.getCreationDate().getTimeInMillis(), childFolder.getLastModificationDate().getTimeInMillis());
 
                     extractFiles(childFolder);
@@ -115,6 +117,7 @@ public class Extractor {
                 File newFile = new File(destinationFolder + childDocument.getPaths().get(0));
                 log.info("File created : " + newFile.getPath());
 
+                //Generating metadata file
                 generateMetadataFile(object, newFile);
 
                 //Inserting content into the new file

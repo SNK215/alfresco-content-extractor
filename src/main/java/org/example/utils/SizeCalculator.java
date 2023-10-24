@@ -18,12 +18,12 @@ public class SizeCalculator {
 
     }
     public void getSizesAndPrefixMultipliers() {
-        Session session = new SessionGenerator().generate(new Credentials());
+        Session session = new SessionGenerator().generate(Credentials.getInstance());
         String rootId = findRootNodeId(session);
         if (rootId!=null) {
             long extractionSize = calculateExtractionSize(session, rootId);
             long availableDiskSpace = calculateAvailableDiskSpace();
-            new IHM().startPermission(extractionSize, (Double) sizeConverter(extractionSize).get(0), (String) sizeConverter(extractionSize).get(1), calculateAvailableDiskSpace(), (Double) sizeConverter(availableDiskSpace).get(0), (String) sizeConverter(availableDiskSpace).get(1));
+            new IHM().startPermission(extractionSize, (Double) sizeConverter(extractionSize).get(0), (String) sizeConverter(extractionSize).get(1), availableDiskSpace, (Double) sizeConverter(availableDiskSpace).get(0), (String) sizeConverter(availableDiskSpace).get(1));
         } else {
             log.error("Root folder not found");
         }
