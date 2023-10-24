@@ -5,13 +5,10 @@ import org.example.model.Credentials;
 
 import java.util.Scanner;
 
-/**
- * (Human Machine Interface) In this class are methods that allows the app to communicate with the user
- */
 @Log4j2
 public class IHM {
     /**
-     * Tells the user if he has enough free space on his computer
+     * Tells the user if he has enough free space on his computer and asks if he wants to proceed with the extraction
      */
     public void startPermission(long extractionSize, double convertExtractionSize, String extractionSizePrefixMultiplier, long availableDiskSpace, double convertAvailableDiskSpace, String availableDiskSpacePrefixMultiplier){
         if (extractionSize >= availableDiskSpace) {

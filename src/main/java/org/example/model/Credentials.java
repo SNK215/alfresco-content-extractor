@@ -53,10 +53,10 @@ public class Credentials {
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
             Properties prop = new Properties();
             prop.load(input);
-            user = prop.getProperty("user");
-            password = prop.getProperty("password");
-            serviceUrl = prop.getProperty("serviceUrl");
-            destinationDirectory = prop.getProperty("destinationDirectory");
+            this.user = prop.getProperty("user");
+            this.password = prop.getProperty("password");
+            this.serviceUrl = prop.getProperty("serviceUrl");
+            this.destinationDirectory = prop.getProperty("destinationDirectory");
             log.info("Params retrieved from extractor_application.properties successfully");
         } catch (FileNotFoundException e) {
             log.error("File " + file.getName() + " not found");

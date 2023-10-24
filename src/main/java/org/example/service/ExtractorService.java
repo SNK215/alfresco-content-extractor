@@ -27,16 +27,18 @@ public class ExtractorService {
      */
     public void startExtraction() throws IOException {
         Credentials credentials = new Credentials();
+
+        SessionGenerator sessionGenerator = new SessionGenerator();
+        Session session = sessionGenerator.generate(credentials);
+
         new SizeCalculator().getSizesAndPrefixMultipliers();
         String destinationDirectory = credentials.getDestinationDirectory();
-        SessionGenerator sessionGenerator = new SessionGenerator();
         DestinationDirectoryManager destinationDirectoryManager = new DestinationDirectoryManager();
 
         Extractor extractor = new Extractor(destinationDirectory);
 
         destinationDirectoryManager.prepare(destinationDirectory);
 
-        Session session = sessionGenerator.generate(credentials);
 
         // "/" refers to the root of the Alfresco repository
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath("/");
