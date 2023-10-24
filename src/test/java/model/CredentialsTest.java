@@ -22,7 +22,7 @@ public class CredentialsTest {
     @Disabled
     public void whenCredentialsCreated_shouldGetDataFromPropertyFile() {
 
-        when(file.getAbsolutePath()).thenReturn("C:\\Users\\llangowski\\Documents\\TUTORIAL_HOME\\Projet Stage\\alfresco-content-extractor\\src\\test\\java\\ressources\\extractor_application.properties");
+        when(file.getAbsolutePath()).thenReturn("C:\\Users\\llangowski\\Documents\\TUTORIAL_HOME\\Projet Stage\\alfresco-content-extractor\\src\\test\\java\\ressources\\extractor_application_test.properties");
 
         Credentials credentials = new Credentials();
 
