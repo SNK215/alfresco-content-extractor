@@ -26,12 +26,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ExtractorTest {
 
-    @Mock
-    Folder folder;
-
-    @Mock
-    Document document;
-
     private final Extractor extractor = new Extractor("");
 
     @Test

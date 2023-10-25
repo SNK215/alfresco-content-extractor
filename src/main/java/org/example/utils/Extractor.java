@@ -48,6 +48,12 @@ public class Extractor {
      */
     private String tempPathError = "";
 
+    private int versionCount = 1;
+
+    private String tempPathVersion = "";
+
+    private String newFileName = "";
+
 
     public Extractor(String destinationFolder) {
         this.destinationFolder = destinationFolder;
@@ -108,30 +114,54 @@ public class Extractor {
 
         for (CmisObject object : folder.getChildren()) {
 
+            versionCount = 1;
+
             if (object instanceof Document) {
 
                 //Mapping CmisObject to Document in order to have access to specific methods
                 Document childDocument = (Document) object;
 
-                //Local file creation
-                File newFile = new File(destinationFolder + childDocument.getPaths().get(0));
-                log.info("File created : " + newFile.getPath());
+                for (Document version : childDocument.getAllVersions()) {
 
-                //Generating metadata file
-                generateMetadataFile(object, newFile);
+                    //Since versions of a document don't have a path, the path of the first version has to be saved temporarily
+                    if (version.getPaths().size() > 0) {
+                        tempPathVersion = version.getPaths().get(0);
+                    }
 
-                //Inserting content into the new file
-                InputStream inputStream = childDocument.getContentStream().getStream();
-                FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
-                log.info("Data stream inserted into file : " + newFile.getName());
+                    //If a document has more than 1 version, version label is added to its filename (ex: testFile_1.1.txt)
+                    if (childDocument.getAllVersions().size() > 1) {
+                        String fileName = tempPathVersion;
+                        int lastDotIndex  = tempPathVersion.lastIndexOf(".");
 
-                addAttributesToFile(newFile, childDocument.getCreationDate().getTimeInMillis(), childDocument.getLastModificationDate().getTimeInMillis());
+                        String nameWithoutExtension = fileName.substring(0, lastDotIndex);
+                        String extension = fileName.substring(lastDotIndex);
+                        newFileName = nameWithoutExtension + "_" + version.getVersionLabel() + extension;
+                    } else {
+                        newFileName = childDocument.getPaths().get(0);
+                    }
 
-                if (newFile.exists()) {
-                    countExtractedFiles++;
-                } else {
-                    countErrors++;
-                    log.error("Cannot extract file : "  + newFile.getPath());
+
+                    //Local file creation
+                    File newFile = new File(destinationFolder + newFileName);
+                    log.info("File created : " + newFile.getPath());
+
+                    //Generating metadata file
+                    generateMetadataFile(object, newFile);
+
+                    //Inserting content into the new file
+                    InputStream inputStream = version.getContentStream().getStream();
+                    FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
+                    log.info("Data stream inserted into file : " + newFile.getName());
+
+                    addAttributesToFile(newFile, version.getCreationDate().getTimeInMillis(), version.getLastModificationDate().getTimeInMillis());
+
+                    if (newFile.exists()) {
+                        countExtractedFiles++;
+                        versionCount++;
+                    } else {
+                        countErrors++;
+                        log.error("Cannot extract file : "  + newFile.getPath());
+                    }
                 }
             }
         }

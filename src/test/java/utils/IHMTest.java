@@ -17,22 +17,6 @@ public class IHMTest {
 
     private IHM ihm = new IHM();
 
-
-    @Test
-    @DisplayName("If user presses Y when getUserChoice() then returns Y")
-    @Disabled
-    public void givenY_whenGetUserChoice_thenReturnY() {
-        //ARRANGE
-        String input = "y";
-        InputStream in = new ByteArrayInputStream(input.getBytes());
-
-        //ACT
-        System.setIn(in);
-
-        //ASSERTs
-        //assertThat(ihm.getUserChoice()).isEqualTo("y");
-    }
-
     @ParameterizedTest(name = "{0} must provoke System.exit()")
     @ValueSource(strings = {"x", "n", "1", "?"})
     @DisplayName("If user presses any other key when getUserChoice() then System.exit()")
