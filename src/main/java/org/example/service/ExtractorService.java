@@ -53,7 +53,10 @@ public class ExtractorService {
 
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toSeconds();
+        log.info("Extracted files : " + extractor.getCountExtractedFiles());
+        log.info("Extracted folders : " + extractor.getCountExtractedFolders());
         log.info("Elapsed time : " + timeElapsed/60 + " minutes and " + timeElapsed % 60 + " seconds");
+
 
         System.out.println("\n" + extractor.getCountExtractedFiles() + " files and " + extractor.getCountExtractedFolders() + " directories extracted successfully in " + timeElapsed/60 + " minutes and " + timeElapsed % 60 + " seconds");
 
