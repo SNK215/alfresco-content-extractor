@@ -18,6 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Alfresco session generator
+ *
+ * @author Jeff Pott
+ */
 @Getter
 @Setter
 @Log4j2
@@ -40,9 +45,9 @@ public class SessionGenerator {
             if (session == null) {
                 SessionFactory factory = SessionFactoryImpl.newInstance();
                 Map<String, String> parameter = new HashMap<>();
-                String user = credentials.getUser();
-                String password = credentials.getPassword();
-                String serviceUrl = credentials.getServiceUrl();
+                String user = Credentials.getUser();
+                String password = Credentials.getPassword();
+                String serviceUrl = Credentials.getServiceUrl();
                 parameter.put(SessionParameter.USER, user);
                 parameter.put(SessionParameter.PASSWORD, password);
                 parameter.put(SessionParameter.BROWSER_URL, serviceUrl);
@@ -54,7 +59,7 @@ public class SessionGenerator {
             }
         }
         catch (CmisObjectNotFoundException e) {
-            log.error("Incorrect serviceUrl, please change it and restart the app (" + credentials.getServiceUrl() + ")");
+            log.error("Incorrect serviceUrl, please change it and restart the app (" + Credentials.getServiceUrl() + ")");
             throw new CmisObjectNotFoundException();
         }
         catch (CmisUnauthorizedException e) {

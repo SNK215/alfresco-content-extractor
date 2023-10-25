@@ -1,5 +1,7 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
@@ -15,21 +17,29 @@ public class Credentials {
     /**
      * Alfresco admin username
      */
+    @Getter
+    @Setter
     private static String user;
 
     /**
      * Alfresco admin password
      */
+    @Getter
+    @Setter
     private static String password;
 
     /**
      * service URL of an Alfresco repository
      */
+    @Getter
+    @Setter
     private static String serviceUrl;
 
     /**
      * Directory where the files and folders will be imported
      */
+    @Getter
+    @Setter
     private static String destinationDirectory;
 
     /**
@@ -40,7 +50,6 @@ public class Credentials {
     public Credentials() {
 
     }
-
 
     /**
      *  Data is recovered from extractor_application.properties and stored in an instance of the class
@@ -84,38 +93,6 @@ public class Credentials {
         }
     }
 
-
-    public static String getUser() {
-        return user;
-    }
-
-    public static void setUser(String user) {
-        Credentials.user = user;
-    }
-
-    public static String getPassword() {
-        return password;
-    }
-
-    public static void setPassword(String password) {
-        Credentials.password = password;
-    }
-
-    public static String getServiceUrl() {
-        return serviceUrl;
-    }
-
-    public static void setServiceUrl(String serviceUrl) {
-        Credentials.serviceUrl = serviceUrl;
-    }
-
-    public static String getDestinationDirectory() {
-        return destinationDirectory;
-    }
-
-    public static void setDestinationDirectory(String destinationDirectory) {
-        Credentials.destinationDirectory = destinationDirectory;
-    }
 
     /**
      * @return instance of the Credentials class
