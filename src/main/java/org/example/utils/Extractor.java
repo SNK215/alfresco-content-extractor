@@ -73,8 +73,7 @@ public class Extractor {
 
                 if (object instanceof Folder) {
 
-                    //Mapping CmisObject to Folder in order to have access to specific methods
-                    Folder childFolder = (Folder) object;
+                    Folder childFolder = (Folder) object; //Mapping CmisObject to Folder in order to have access to specific methods
 
                     //Local folder creation
                     File newDir = new File(destinationFolder + "/" + childFolder.getPath());
@@ -85,11 +84,9 @@ public class Extractor {
                     }
                     tempPathError = newDir.getPath();
 
-                    //Generating metadata file
-                    generateMetadataFile(object, newDir);
+                    generateMetadataFile(object, newDir); //Generating metadata file
 
-                    //Adding attributes to file
-                    addAttributesToFile(newDir, childFolder.getCreationDate().getTimeInMillis(), childFolder.getLastModificationDate().getTimeInMillis());
+                    addAttributesToFile(newDir, childFolder.getCreationDate().getTimeInMillis(), childFolder.getLastModificationDate().getTimeInMillis()); //Adding attributes to file
 
                     extractFiles(childFolder);
                     extractFolders(childFolder);
@@ -98,6 +95,8 @@ public class Extractor {
         }
         catch (NullPointerException e) {
             countErrors++;
+
+            // Logging error
             log.error("Cannot extract directory : "  + tempPathError);
             log.error(e.toString());
             for (StackTraceElement s : e.getStackTrace()) {
@@ -117,13 +116,12 @@ public class Extractor {
 
             if (object instanceof Document) {
 
-                //Mapping CmisObject to Document in order to have access to specific methods
-                Document childDocument = (Document) object;
+                Document childDocument = (Document) object; //Mapping CmisObject to Document in order to have access to specific methods
 
                 for (Document version : childDocument.getAllVersions()) {
 
-                    //Since versions of a document don't have a path, the path of the first version has to be saved temporarily
-                    if (version.getPaths().size() > 0) {
+                    //Since versions of a document don't have a path, the path of the main version has to be saved temporarily
+                    if (!version.getPaths().isEmpty()) {
                         tempPathVersion = version.getPaths().get(0);
                     }
 
@@ -144,15 +142,14 @@ public class Extractor {
                     File newFile = new File(destinationFolder + newFileName);
                     log.info("File created : " + newFile.getPath());
 
-                    //Generating metadata file
-                    generateMetadataFile(object, newFile);
+                    generateMetadataFile(object, newFile); //Generating metadata file
 
                     //Inserting content into the new file
                     InputStream inputStream = version.getContentStream().getStream();
                     FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
                     log.info("Data stream inserted into file : " + newFile.getName());
 
-                    addAttributesToFile(newFile, version.getCreationDate().getTimeInMillis(), version.getLastModificationDate().getTimeInMillis());
+                    addAttributesToFile(newFile, version.getCreationDate().getTimeInMillis(), version.getLastModificationDate().getTimeInMillis()); //Adding attributes to file
 
                     if (newFile.exists()) {
                         countExtractedFiles++;
@@ -165,6 +162,7 @@ public class Extractor {
         }
     }
 
+
     /**
      * Method that adds attributes to a given file
      * @param file file that needs its attributes to be modified
@@ -174,10 +172,14 @@ public class Extractor {
      */
     public void addAttributesToFile(File file, long creationDateMs, long lastModifDateMs) throws IOException {
         FileTime creationDateFileTime = FileTime.fromMillis(creationDateMs);
+
         Files.setAttribute(file.toPath(),"creationTime",creationDateFileTime);
+
         file.setLastModified(lastModifDateMs);
+
         log.info("attributes added to : " + file.getName());
     }
+
 
     /**
      * @param object CmisObject from which the metadata will be extracted
@@ -197,7 +199,9 @@ public class Extractor {
 
         //Creating a new JSON entry for each property of the CmisObject
         for (Property<?> property : object.getProperties()) {
+
             JSONObject propertyObject = new JSONObject();
+
             propertyObject.put("id", property.getId());
             propertyObject.put("displayName", property.getDisplayName());
             propertyObject.put("localName", property.getLocalName());
@@ -208,6 +212,7 @@ public class Extractor {
                 propertyObject.put("values", new JSONObject());
             } else {
                 JSONArray valuesArray = new JSONArray();
+
                 for (Object value : property.getValues()) {
                     valuesArray.add(value.toString().replaceAll("\\[\\]",""));
                 }
@@ -219,7 +224,7 @@ public class Extractor {
 
         jsonObject.put("properties", jsonArray);
 
-        //Inserting Aces/Acls (permissions) in the JSON file
+        //Inserting permissions in the JSON file
 
         JSONArray jsonArrayAce = new JSONArray();
 
@@ -229,6 +234,7 @@ public class Extractor {
 
             for (Ace ace : session.getObjectByPath(document.getPaths().get(0),oc).getAcl().getAces()) {
                 JSONObject jsonObjectAce = new JSONObject();
+
                 jsonObjectAce.put("principalId",ace.getPrincipalId());
                 jsonObjectAce.put("permission", ace.getPermissions().get(0));
 

@@ -44,10 +44,13 @@ public class SessionGenerator {
         try {
             if (session == null) {
                 SessionFactory factory = SessionFactoryImpl.newInstance();
+
                 Map<String, String> parameter = new HashMap<>();
+
                 String user = Credentials.getUser();
                 String password = Credentials.getPassword();
                 String serviceUrl = Credentials.getServiceUrl();
+
                 parameter.put(SessionParameter.USER, user);
                 parameter.put(SessionParameter.PASSWORD, password);
                 parameter.put(SessionParameter.BROWSER_URL, serviceUrl);
