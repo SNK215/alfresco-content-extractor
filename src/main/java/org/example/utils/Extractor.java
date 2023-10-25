@@ -48,8 +48,6 @@ public class Extractor {
      */
     private String tempPathError = "";
 
-    private int versionCount = 1;
-
     private String tempPathVersion = "";
 
     private String newFileName = "";
@@ -99,6 +97,7 @@ public class Extractor {
         catch (NullPointerException e) {
             countErrors++;
             log.error("Cannot extract directory : "  + tempPathError);
+            log.error(e.toString());
             for (StackTraceElement s : e.getStackTrace()) {
                 log.error("StackTrace : " + s);
             }
@@ -113,8 +112,6 @@ public class Extractor {
     public void extractFiles(Folder folder) throws IOException {
 
         for (CmisObject object : folder.getChildren()) {
-
-            versionCount = 1;
 
             if (object instanceof Document) {
 
@@ -157,7 +154,6 @@ public class Extractor {
 
                     if (newFile.exists()) {
                         countExtractedFiles++;
-                        versionCount++;
                     } else {
                         countErrors++;
                         log.error("Cannot extract file : "  + newFile.getPath());
