@@ -50,10 +50,10 @@ public class Credentials {
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
             Properties prop = new Properties();
             prop.load(input);
-            this.user = prop.getProperty("user");
-            this.password = prop.getProperty("password");
-            this.serviceUrl = prop.getProperty("serviceUrl");
-            this.destinationDirectory = prop.getProperty("destinationDirectory");
+            user = prop.getProperty("user");
+            password = prop.getProperty("password");
+            serviceUrl = prop.getProperty("serviceUrl");
+            destinationDirectory = prop.getProperty("destinationDirectory");
             log.info("Params retrieved from extractor_application.properties successfully");
         } catch (FileNotFoundException e) {
             log.error("File " + file.getName() + " not found");
@@ -63,6 +63,27 @@ public class Credentials {
             throw new RuntimeException(e);
         }
     }
+    public void resetPropertyValues() {
+        File file = new File("extractor_application.properties");
+        try (OutputStream output = new FileOutputStream(file.getAbsolutePath())) {
+            Properties prop = new Properties();
+
+            // Modification des propriétés
+            prop.setProperty("user", "");
+            prop.setProperty("password", "");
+            prop.setProperty("serviceUrl", serviceUrl);
+            prop.setProperty("destinationDirectory", destinationDirectory);
+
+            // Enregistrement des modifications dans le fichier sans la ligne de commentaire
+            for (String key : prop.stringPropertyNames()) {
+                String value = prop.getProperty(key);
+                output.write((key + "=" + value + "\n").getBytes("UTF-8"));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Erreur lors de l'enregistrement des modifications", e);
+        }
+    }
+
 
     public static String getUser() {
         return user;

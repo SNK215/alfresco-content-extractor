@@ -56,7 +56,7 @@ public class ExtractorService {
         log.info("Extracted files : " + extractor.getCountExtractedFiles());
         log.info("Extracted folders : " + extractor.getCountExtractedFolders());
         log.info("Elapsed time : " + timeElapsed/60 + " minutes and " + timeElapsed % 60 + " seconds");
-
+        credentials.resetPropertyValues();
 
         System.out.println("\n" + extractor.getCountExtractedFiles() + " files and " + extractor.getCountExtractedFolders() + " directories extracted successfully in " + timeElapsed/60 + " minutes and " + timeElapsed % 60 + " seconds");
 
@@ -66,7 +66,6 @@ public class ExtractorService {
         );
 
         System.out.println("\n\nPress enter to exit...\n\n");
-
         //Reads user input
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         in.readLine();
