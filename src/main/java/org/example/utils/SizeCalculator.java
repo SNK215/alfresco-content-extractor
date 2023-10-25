@@ -88,6 +88,8 @@ public class SizeCalculator {
         String partition = Credentials.getInstance().getDestinationDirectory().substring(0,2);
         log.info("Chosen partition : " + partition);
         File file = new File(partition);
+        //Ligne suivante pour test espace disque insuffisant (à supprimer avant prod)
+        // return 10000L;
         return file.getFreeSpace();
     }
 

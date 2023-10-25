@@ -30,7 +30,7 @@ public class ExtractorService {
     public void startExtraction() throws IOException {
         Instant start = Instant.now();
         Credentials credentials = new Credentials();
-
+        credentials.init();
         SessionGenerator sessionGenerator = new SessionGenerator();
         Session session = sessionGenerator.generate(credentials);
 
