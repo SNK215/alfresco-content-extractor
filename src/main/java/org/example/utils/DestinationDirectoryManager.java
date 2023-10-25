@@ -2,20 +2,28 @@ package org.example.utils;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
+import org.example.model.Credentials;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 
+/**
+ * Prepare destination directory
+ *
+ * @author Lucas Langowski
+ */
 @Log4j2
 public class DestinationDirectoryManager {
+
 
     public DestinationDirectoryManager() {
     }
 
     /**
-     * Method used to prepare the destination directory of the extraction.
+     * Prepare the destination directory of the extraction.
      * The destination directory is created if it doesn't exist, and is cleaned if it does exist.
-     * @param destinationDirectory where the extracted files will be created
+     * @param destinationDirectory where the extracted files will be injected
      * @throws IOException when the destination directory cannot be cleaned
      *
      */

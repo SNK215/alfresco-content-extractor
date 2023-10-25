@@ -16,6 +16,8 @@ import java.nio.file.attribute.FileTime;
 
 /**
  * Class that will extract the content of the Alfresco repository and inject it on the users device
+ *
+ * @author Lucas Langowski
  */
 @Getter
 @Setter

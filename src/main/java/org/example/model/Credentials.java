@@ -1,5 +1,7 @@
 package org.example.model;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
@@ -15,21 +17,29 @@ public class Credentials {
     /**
      * Alfresco admin username
      */
+    @Getter
+    @Setter
     private static String user;
 
     /**
      * Alfresco admin password
      */
+    @Getter
+    @Setter
     private static String password;
 
     /**
      * service URL of an Alfresco repository
      */
+    @Getter
+    @Setter
     private static String serviceUrl;
 
     /**
      * Directory where the files and folders will be imported
      */
+    @Getter
+    @Setter
     private static String destinationDirectory;
 
     /**
@@ -41,7 +51,6 @@ public class Credentials {
 
     }
 
-
     /**
      *  Data is recovered from extractor_application.properties and stored in an instance of the class
      */
@@ -50,10 +59,10 @@ public class Credentials {
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
             Properties prop = new Properties();
             prop.load(input);
-            this.user = prop.getProperty("user");
-            this.password = prop.getProperty("password");
-            this.serviceUrl = prop.getProperty("serviceUrl");
-            this.destinationDirectory = prop.getProperty("destinationDirectory");
+            user = prop.getProperty("user");
+            password = prop.getProperty("password");
+            serviceUrl = prop.getProperty("serviceUrl");
+            destinationDirectory = prop.getProperty("destinationDirectory");
             log.info("Params retrieved from extractor_application.properties successfully");
         } catch (FileNotFoundException e) {
             log.error("File " + file.getName() + " not found");
@@ -62,38 +71,6 @@ public class Credentials {
             log.error("Error retrieving login data, please verify and modify extractor_application.properties");
             throw new RuntimeException(e);
         }
-    }
-
-    public static String getUser() {
-        return user;
-    }
-
-    public static void setUser(String user) {
-        Credentials.user = user;
-    }
-
-    public static String getPassword() {
-        return password;
-    }
-
-    public static void setPassword(String password) {
-        Credentials.password = password;
-    }
-
-    public static String getServiceUrl() {
-        return serviceUrl;
-    }
-
-    public static void setServiceUrl(String serviceUrl) {
-        Credentials.serviceUrl = serviceUrl;
-    }
-
-    public static String getDestinationDirectory() {
-        return destinationDirectory;
-    }
-
-    public static void setDestinationDirectory(String destinationDirectory) {
-        Credentials.destinationDirectory = destinationDirectory;
     }
 
     /**

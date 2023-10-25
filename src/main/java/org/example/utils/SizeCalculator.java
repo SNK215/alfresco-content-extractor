@@ -11,6 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Used to calculate free disk space and extraction size
+ *
+ * @author Alexandre Lecoeur
+ */
 @Log4j2
 public class SizeCalculator {
 
