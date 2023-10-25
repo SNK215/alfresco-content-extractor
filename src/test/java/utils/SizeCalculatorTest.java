@@ -20,9 +20,8 @@ import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class SizeCalculatorTest {
@@ -33,10 +32,10 @@ public class SizeCalculatorTest {
         sizeCalculator = new SizeCalculator();
     }
     @Test
-    public void findRootNodeIdWhenRootIdNotNull() {
+    public void givenRootIdNotNull_whenFindRootNodeId_thenReturnCorrectPath () {
         // Création session
-        Session session = Mockito.mock(Session.class);
-        Folder rootFolder = Mockito.mock(Folder.class);
+        Session session = mock(Session.class);
+        Folder rootFolder = mock(Folder.class);
         when(session.getRootFolder()).thenReturn(rootFolder);
         when(rootFolder.getId()).thenReturn("rootId");
 
@@ -46,17 +45,17 @@ public class SizeCalculatorTest {
     }
 
     @Test
-    public void findRootNodeIdWhenRootIdNull() {
-        Session session = Mockito.mock(Session.class);
-        Folder rootFolder = Mockito.mock(Folder.class);
+    public void givenRootIdNull_whenFindRootNodeId_thenReturnFolderId() {
+        Session session = mock(Session.class);
+        Folder rootFolder = mock(Folder.class);
 
         // Mocker ItemIterable
-        ItemIterable<CmisObject> itemIterable = Mockito.mock(ItemIterable.class);
+        ItemIterable<CmisObject> itemIterable = mock(ItemIterable.class);
 
         List<CmisObject> cmisObjectList = new ArrayList<>();
 
         // Créer enfant fictif de type folder
-        Folder folder = Mockito.mock(Folder.class);
+        Folder folder = mock(Folder.class);
         when(folder.getId()).thenReturn("childFolderId");
 
         // Ajouter folder à liste
@@ -78,14 +77,14 @@ public class SizeCalculatorTest {
         assertEquals(folder.getId(), result);
     }
     @Test
-    public void calculateExtractionSizeForFile() {
-        Session session = Mockito.mock(Session.class);
-        Folder rootFolder = Mockito.mock(Folder.class);
+    public void givenFile_whenCalculateExtractionSize_thenReturnSize(){
+        Session session = mock(Session.class);
+        Folder rootFolder = mock(Folder.class);
 
-        ItemIterable<CmisObject> itemIterable = Mockito.mock(ItemIterable.class);
+        ItemIterable<CmisObject> itemIterable = mock(ItemIterable.class);
 
         // Créer faux fichier
-        Document document = Mockito.mock(Document.class);
+        Document document = mock(Document.class);
         when(document.getContentStreamLength()).thenReturn(10L);
 
         List<CmisObject> cmisObjectList = new ArrayList<>();
@@ -101,8 +100,8 @@ public class SizeCalculatorTest {
     }
 
     @Test
-    public void calculateExtractionSizeWithRootFolderNotFound() {
-        Session session = Mockito.mock(Session.class);
+    public void givenRootFolderNotFound_whenCalculateExtractionSize_thenReturn0() {
+        Session session = mock(Session.class);
 
         when(session.getObject("rootId")).thenThrow(new CmisObjectNotFoundException("Root folder not found"));
 
@@ -112,7 +111,7 @@ public class SizeCalculatorTest {
     }
 
     @Test
-    public void calculateAvailableDiskSpaceIsMoreThan0() {
+    public void givenFile_whenCalculateAvailableDiskSpace_thenReturnIfAvailableDiskSpaceMoreThan0() {
         Credentials credentials = Credentials.getInstance();
         credentials.setDestinationDirectory("C:\\example\\directory");
 
@@ -140,12 +139,12 @@ public class SizeCalculatorTest {
     @Test
     public void testGetSizesAndPrefixMultipliersSuccess() {
         // Créez des mocks pour les dépendances nécessaires
-        SessionGenerator sessionGenerator = Mockito.mock(SessionGenerator.class);
-        IHM ihm = Mockito.mock(IHM.class);
+        SessionGenerator sessionGenerator = mock(SessionGenerator.class);
+        IHM ihm = mock(IHM.class);
         SizeCalculator sizeCalculator = new SizeCalculator();
 
         // Configurez le comportement attendu de vos mocks
-        Session session = Mockito.mock(Session.class);
+        Session session = mock(Session.class);
         when(sessionGenerator.generate(any(Credentials.class))).thenReturn(session);
 
         // Assurez-vous que rootId est non nul

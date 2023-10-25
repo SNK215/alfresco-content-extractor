@@ -27,7 +27,7 @@ public class ExtractorService {
      */
     public void startExtraction() throws IOException {
         Credentials credentials = new Credentials();
-
+        credentials.init();
         SessionGenerator sessionGenerator = new SessionGenerator();
         Session session = sessionGenerator.generate(credentials);
 
