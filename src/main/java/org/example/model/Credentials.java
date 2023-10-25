@@ -59,8 +59,6 @@ public class Credentials {
         try (InputStream input = new FileInputStream(file.getAbsolutePath())) {
             Properties prop = new Properties();
             prop.load(input);
-            user = prop.getProperty("user");
-            password = prop.getProperty("password");
             serviceUrl = prop.getProperty("serviceUrl");
             destinationDirectory = prop.getProperty("destinationDirectory");
             log.info("Params retrieved from extractor_application.properties successfully");

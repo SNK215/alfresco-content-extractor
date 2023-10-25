@@ -5,10 +5,7 @@ import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
 
 import org.example.model.Credentials;
-import org.example.utils.DestinationDirectoryManager;
-import org.example.utils.Extractor;
-import org.example.utils.SessionGenerator;
-import org.example.utils.SizeCalculator;
+import org.example.utils.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -37,6 +34,9 @@ public class ExtractorService {
     public void startExtraction() throws IOException {
 
         Instant start = Instant.now();
+
+        IHM ihm = new IHM();
+        ihm.credentialsRequest();
 
         Credentials credentials = new Credentials();
         credentials.init();

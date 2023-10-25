@@ -13,6 +13,16 @@ import java.util.Scanner;
  */
 @Log4j2
 public class IHM {
+    public void credentialsRequest () {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("This program needs admin login and password to connect to Alfresco.");
+        System.out.println("Admin login :");
+        String login = sc.nextLine();
+        Credentials.setUser(login);
+        System.out.println("Admin password :");
+        String password = sc.nextLine();
+        Credentials.setPassword(password);
+    }
     public void startPermission(long extractionSize, double convertExtractionSize, String extractionSizePrefixMultiplier, long availableDiskSpace, double convertAvailableDiskSpace, String availableDiskSpacePrefixMultiplier){
         if (extractionSize >= availableDiskSpace) {
             log.error("Insufficient disk space. Available: " + availableDiskSpace + " bytes(" + convertAvailableDiskSpace + " " + availableDiskSpacePrefixMultiplier + "). Minimum expected: " + extractionSize + " bytes("+ convertExtractionSize + " " + extractionSizePrefixMultiplier +").");

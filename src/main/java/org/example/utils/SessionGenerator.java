@@ -63,8 +63,8 @@ public class SessionGenerator {
             throw new CmisObjectNotFoundException();
         }
         catch (CmisUnauthorizedException e) {
-            log.error("Incorrect username or password, please change it and restart the app");
-            throw new CmisUnauthorizedException();
+            log.error("Username or password is incorrect");
+            new IHM().credentialsRequest();
         }
         return this.session;
     }
