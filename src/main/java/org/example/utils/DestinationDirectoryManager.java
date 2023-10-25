@@ -27,7 +27,7 @@ public class DestinationDirectoryManager {
 
         if (!Files.exists(directoryPath)) {
 
-            directory.mkdir();
+            directory.mkdirs();
             log.warn("Destination directory created at " + destinationDirectory);
 
         } else {
