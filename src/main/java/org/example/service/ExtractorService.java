@@ -13,6 +13,8 @@ import org.example.utils.SizeCalculator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.time.Duration;
+import java.time.Instant;
 
 
 @Log4j2
@@ -26,6 +28,7 @@ public class ExtractorService {
      * @throws IOException in case there is a problem with local file manipulation
      */
     public void startExtraction() throws IOException {
+        Instant start = Instant.now();
         Credentials credentials = new Credentials();
 
         SessionGenerator sessionGenerator = new SessionGenerator();
@@ -48,7 +51,11 @@ public class ExtractorService {
 
         extractor.extractFolders(alfrescoRootFolder);
 
-        System.out.println("\n" + extractor.getCountExtractedFiles() + " files and " + extractor.getCountExtractedFolders() + " directories extracted successfully");
+        Instant finish = Instant.now();
+        long timeElapsed = Duration.between(start, finish).toSeconds();
+        log.info("Elapsed time : " + timeElapsed/60 + " minutes and " + timeElapsed % 60 + " seconds");
+
+        System.out.println("\n" + extractor.getCountExtractedFiles() + " files and " + extractor.getCountExtractedFolders() + " directories extracted successfully in " + timeElapsed/60 + " minutes and " + timeElapsed % 60 + " seconds");
 
         System.out.println(extractor.getCountErrors() == 0 ?
                 "No errors detected" :

@@ -26,8 +26,8 @@ public class IHM {
 
     public void getUserChoice() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("YES : press [y]");
-        System.out.println("NO  : press any other key");
+        System.out.println("YES : press [y] then enter");
+        System.out.println("NO  : press any other key then enter");
         String choice = sc.nextLine().toLowerCase();
         if (!choice.equals("y")) {
             System.exit(0);
