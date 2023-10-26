@@ -36,6 +36,7 @@ public class SizeCalculator {
         if (rootId != null) {
             long extractionSize = calculateExtractionSize(session, rootId);
             long availableDiskSpace = calculateAvailableDiskSpace();
+
             new IHM().startPermission(extractionSize, (Double) sizeConverter(extractionSize).get(0), (String) sizeConverter(extractionSize).get(1), availableDiskSpace, (Double) sizeConverter(availableDiskSpace).get(0), (String) sizeConverter(availableDiskSpace).get(1));
         } else {
             log.error("Root folder not found");

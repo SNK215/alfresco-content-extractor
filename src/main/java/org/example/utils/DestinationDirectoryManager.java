@@ -2,7 +2,6 @@ package org.example.utils;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;
-import org.example.model.Credentials;
 
 import java.io.File;
 import java.io.IOException;

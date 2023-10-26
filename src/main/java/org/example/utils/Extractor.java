@@ -50,10 +50,6 @@ public class Extractor {
      */
     private String tempPathError = "";
 
-    private String tempPathVersion = "";
-
-    private String newFileName = "";
-
 
     public Extractor(String destinationFolder) {
         this.destinationFolder = destinationFolder;
@@ -111,6 +107,9 @@ public class Extractor {
      * @throws IOException in case there is a problem with local file creation
      */
     public void extractFiles(Folder folder) throws IOException {
+
+        String tempPathVersion = "";
+        String newFileName = "";
 
         for (CmisObject object : folder.getChildren()) {
 

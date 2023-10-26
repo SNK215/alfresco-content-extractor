@@ -54,13 +54,14 @@ public class ExtractorService {
 
         destinationDirectoryManager.prepare(credentials.getDestinationDirectory());
 
+        // If the user chooses a custom folder to be extracted, it needs to be created first before extraction
         File selectiveFolder = new File(credentials.getDestinationDirectory() + credentials.getSelectiveExtractorPath());
         if (!selectiveFolder.exists()) {
             selectiveFolder.mkdir();
             extractor.setCountExtractedFolders(extractor.getCountExtractedFolders() + 1);
         }
 
-        Folder alfrescoRootFolder = (Folder) session.getObjectByPath(credentials.getSelectiveExtractorPath()); // "/" refers to the root of the Alfresco repository
+        Folder alfrescoRootFolder = (Folder) session.getObjectByPath(credentials.getSelectiveExtractorPath());
 
         log.info("Connected to Alfresco through " + credentials.getServiceUrl());
 
