@@ -79,7 +79,6 @@ public class SizeCalculator {
 
         try {
             rootFolder = (Folder) session.getObject(rootId);
-            //rootFolder = (Folder) session.getObjectByPath(Credentials.getInstance().getSelectiveExtractorPath());
         } catch (CmisObjectNotFoundException e) {
             log.error("Root folder not found"+ e.getMessage());
             return 0;
@@ -87,9 +86,7 @@ public class SizeCalculator {
 
         long calcSize = 0;
 
-        ItemIterable<CmisObject> children = rootFolder.getChildren();
-
-        for (CmisObject child : children) {
+        for (CmisObject child : rootFolder.getChildren()) {
             if (child instanceof Document) {
                 Document document = (Document) child;
                 calcSize += document.getContentStreamLength();
