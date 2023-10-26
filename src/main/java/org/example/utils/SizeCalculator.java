@@ -36,7 +36,6 @@ public class SizeCalculator {
         if (rootId != null) {
             long extractionSize = calculateExtractionSize(session, rootId);
             long availableDiskSpace = calculateAvailableDiskSpace();
-
             new IHM().startPermission(extractionSize, (Double) sizeConverter(extractionSize).get(0), (String) sizeConverter(extractionSize).get(1), availableDiskSpace, (Double) sizeConverter(availableDiskSpace).get(0), (String) sizeConverter(availableDiskSpace).get(1));
         } else {
             log.error("Root folder not found");
@@ -49,7 +48,7 @@ public class SizeCalculator {
      * @return NodeId of the Alfresco repository
      */
     public String findRootNodeId (Session session) {
-        Folder rootFolder = session.getRootFolder();
+        Folder rootFolder = (Folder) session.getObjectByPath(Credentials.getInstance().getSelectiveExtractorPath());
         String rootNodeId = rootFolder.getId();
 
         if (rootNodeId != null) {
@@ -80,6 +79,7 @@ public class SizeCalculator {
 
         try {
             rootFolder = (Folder) session.getObject(rootId);
+            //rootFolder = (Folder) session.getObjectByPath(Credentials.getInstance().getSelectiveExtractorPath());
         } catch (CmisObjectNotFoundException e) {
             log.error("Root folder not found"+ e.getMessage());
             return 0;
