@@ -118,46 +118,47 @@ public class Extractor {
 
                 Document childDocument = (Document) object; //Mapping CmisObject to Document in order to have access to specific methods
 
-                for (Document version : childDocument.getAllVersions()) {
+                    for (Document version : childDocument.getAllVersions()) {
 
-                    //Since versions of a document don't have a path, the path of the main version has to be saved temporarily
-                    if (!version.getPaths().isEmpty()) {
-                        tempPathVersion = version.getPaths().get(0);
+                        //Since versions of a document don't have a path, the path of the main version has to be saved temporarily
+                        if (!version.getPaths().isEmpty()) {
+                            tempPathVersion = version.getPaths().get(0);
+                        }
+
+                        //If a document has more than 1 version, version label is added to its filename (ex: testFile_1.1.txt)
+                        if (childDocument.getAllVersions().size() > 1) {
+
+                            String fileName = tempPathVersion;
+                            int lastDotIndex  = tempPathVersion.lastIndexOf(".");
+
+                            String nameWithoutExtension = fileName.substring(0, lastDotIndex);
+                            String extension = fileName.substring(lastDotIndex);
+                            newFileName = nameWithoutExtension + "_" + version.getVersionLabel() + extension;
+                        } else {
+                            newFileName = childDocument.getPaths().get(0);
+                        }
+
+                        //Local file creation
+                        File newFile = new File(destinationFolder + newFileName);
+                        log.info("File created : " + newFile.getPath());
+
+                        generateMetadataFile(object, newFile); //Generating metadata file
+
+                        //Inserting content into the new file
+                        InputStream inputStream = version.getContentStream().getStream();
+                        FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
+                        log.info("Data stream inserted into file : " + newFile.getName());
+
+                        addAttributesToFile(newFile, version.getCreationDate().getTimeInMillis(), version.getLastModificationDate().getTimeInMillis()); //Adding attributes to file
+
+                        if (newFile.exists()) {
+                            countExtractedFiles++;
+                        } else {
+                            countErrors++;
+                            log.error("Cannot extract file : "  + newFile.getPath());
+                        }
                     }
 
-                    //If a document has more than 1 version, version label is added to its filename (ex: testFile_1.1.txt)
-                    if (childDocument.getAllVersions().size() > 1) {
-                        String fileName = tempPathVersion;
-                        int lastDotIndex  = tempPathVersion.lastIndexOf(".");
-
-                        String nameWithoutExtension = fileName.substring(0, lastDotIndex);
-                        String extension = fileName.substring(lastDotIndex);
-                        newFileName = nameWithoutExtension + "_" + version.getVersionLabel() + extension;
-                    } else {
-                        newFileName = childDocument.getPaths().get(0);
-                    }
-
-
-                    //Local file creation
-                    File newFile = new File(destinationFolder + newFileName);
-                    log.info("File created : " + newFile.getPath());
-
-                    generateMetadataFile(object, newFile); //Generating metadata file
-
-                    //Inserting content into the new file
-                    InputStream inputStream = version.getContentStream().getStream();
-                    FileUtils.writeByteArrayToFile(newFile, inputStream.readAllBytes());
-                    log.info("Data stream inserted into file : " + newFile.getName());
-
-                    addAttributesToFile(newFile, version.getCreationDate().getTimeInMillis(), version.getLastModificationDate().getTimeInMillis()); //Adding attributes to file
-
-                    if (newFile.exists()) {
-                        countExtractedFiles++;
-                    } else {
-                        countErrors++;
-                        log.error("Cannot extract file : "  + newFile.getPath());
-                    }
-                }
             }
         }
     }

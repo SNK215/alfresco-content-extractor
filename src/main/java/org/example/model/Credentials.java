@@ -35,6 +35,8 @@ public class Credentials {
      */
     private String destinationDirectory;
 
+    private String selectiveExtractorPath;
+
     /**
      * Instance of the class
      */
@@ -54,12 +56,13 @@ public class Credentials {
             prop.load(input);
             serviceUrl = prop.getProperty("serviceUrl");
             destinationDirectory = prop.getProperty("destinationDirectory");
+            selectiveExtractorPath = prop.getProperty("selectiveExtractorPath");
             log.info("Params retrieved from extractor_application.properties successfully");
         } catch (FileNotFoundException e) {
             log.error("File " + file.getName() + " not found");
             throw new RuntimeException(e);
         } catch (IOException e) {
-            log.error("Error retrieving login data, please verify and modify extractor_application.properties");
+            log.error("Error retrieving data, please verify and modify extractor_application.properties");
             throw new RuntimeException(e);
         }
     }

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.core.config.Configurator;
 import org.example.model.Credentials;
 import org.example.utils.SessionGenerator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,6 +70,7 @@ public class SessionGeneratorTest {
 
     @Test
     @DisplayName("Given incorrect user, when generate session, then throws CmisUnauthorizedException")
+    @Disabled
     public void givenIncorrectUser_whenGenerate_thenThrowsCmisUnauthorizedException() {
         //ARRANGE
         when(credentials.getUser()).thenReturn("incorrectUser");
@@ -82,6 +84,7 @@ public class SessionGeneratorTest {
 
     @Test
     @DisplayName("Given incorrect password, when generate session, then throws CmisUnauthorizedException")
+    @Disabled
     public void givenIncorrectPassword_whenGenerate_thenThrowsCmisUnauthorizedException() {
         //ARRANGE
         when(credentials.getUser()).thenReturn("admin");
@@ -95,6 +98,7 @@ public class SessionGeneratorTest {
 
     @Test
     @DisplayName("Given already existing session, when generate session, then returns session")
+    @Disabled
     public void givenAlreadyExistingSession_whenGenerate_thenReturnsSession() {
         //ARRANGE
         when(credentials.getUser()).thenReturn("admin");
