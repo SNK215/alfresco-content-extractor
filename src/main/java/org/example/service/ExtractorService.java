@@ -38,7 +38,9 @@ public class ExtractorService {
         IHM ihm = new IHM();
         ihm.credentialsRequest();
 
-        Credentials credentials = new Credentials();
+//        Credentials credentials = new Credentials();
+//        credentials.init();
+        Credentials credentials = Credentials.getInstance();
         credentials.init();
 
         SessionGenerator sessionGenerator = new SessionGenerator();
@@ -49,13 +51,13 @@ public class ExtractorService {
 
         DestinationDirectoryManager destinationDirectoryManager = new DestinationDirectoryManager();
 
-        Extractor extractor = new Extractor(Credentials.getDestinationDirectory());
+        Extractor extractor = new Extractor(credentials.getDestinationDirectory());
 
-        destinationDirectoryManager.prepare(Credentials.getDestinationDirectory());
+        destinationDirectoryManager.prepare(credentials.getDestinationDirectory());
 
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath("/"); // "/" refers to the root of the Alfresco repository
 
-        log.info("Connected to Alfresco through " + Credentials.getServiceUrl());
+        log.info("Connected to Alfresco through " + credentials.getServiceUrl());
 
         extractor.extractFolders(alfrescoRootFolder);
 

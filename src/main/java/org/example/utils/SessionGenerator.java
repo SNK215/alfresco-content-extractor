@@ -47,9 +47,9 @@ public class SessionGenerator {
 
                 Map<String, String> parameter = new HashMap<>();
 
-                String user = Credentials.getUser();
-                String password = Credentials.getPassword();
-                String serviceUrl = Credentials.getServiceUrl();
+                String user = credentials.getUser();
+                String password = credentials.getPassword();
+                String serviceUrl = credentials.getServiceUrl();
 
                 parameter.put(SessionParameter.USER, user);
                 parameter.put(SessionParameter.PASSWORD, password);
@@ -62,7 +62,7 @@ public class SessionGenerator {
             }
         }
         catch (CmisObjectNotFoundException e) {
-            log.error("Incorrect serviceUrl, please change it and restart the app (" + Credentials.getServiceUrl() + ")");
+            log.error("Incorrect serviceUrl, please change it and restart the app (" + credentials.getServiceUrl() + ")");
             throw new CmisObjectNotFoundException();
         }
         catch (CmisUnauthorizedException e) {

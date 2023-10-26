@@ -11,17 +11,19 @@ import java.util.Scanner;
  *
  * @author Alexandre Lecoeur
  */
+
 @Log4j2
 public class IHM {
+    Credentials credentials = Credentials.getInstance();
     public void credentialsRequest () {
         Scanner sc = new Scanner(System.in);
         System.out.println("This program needs admin login and password to connect to Alfresco.");
         System.out.println("Admin login :");
         String login = sc.nextLine();
-        Credentials.setUser(login);
+        credentials.setUser(login);
         System.out.println("Admin password :");
         String password = sc.nextLine();
-        Credentials.setPassword(password);
+        credentials.setPassword(password);
     }
     public void startPermission(long extractionSize, double convertExtractionSize, String extractionSizePrefixMultiplier, long availableDiskSpace, double convertAvailableDiskSpace, String availableDiskSpacePrefixMultiplier){
         if (extractionSize >= availableDiskSpace) {
@@ -31,7 +33,7 @@ public class IHM {
         } else {
             log.info("Available space on chosen partition : " + convertAvailableDiskSpace + " " + availableDiskSpacePrefixMultiplier +".");
             log.info("Total size of folders and files to extract : " + convertExtractionSize + " " + extractionSizePrefixMultiplier +".");
-            log.info("Destination directory : " + Credentials.getDestinationDirectory());
+            log.info("Destination directory : " + credentials.getDestinationDirectory());
             System.out.println("\nDo you want to start extracting ? (check available disk space and destination directory)");
             getUserChoice();
         }

@@ -106,7 +106,8 @@ public class SizeCalculator {
      * @return Amount of free space on the user's partition. Partition is defined in extractor_application.properties
      */
     public long calculateAvailableDiskSpace() {
-        String partition = Credentials.getDestinationDirectory().substring(0,2);
+        Credentials credentials = Credentials.getInstance();
+        String partition = credentials.getDestinationDirectory().substring(0,2);
 
         log.info("Chosen partition : " + partition);
 
