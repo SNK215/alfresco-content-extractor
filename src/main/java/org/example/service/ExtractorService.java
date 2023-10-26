@@ -8,6 +8,7 @@ import org.example.model.Credentials;
 import org.example.utils.*;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.Duration;
@@ -52,6 +53,9 @@ public class ExtractorService {
         Extractor extractor = new Extractor(Credentials.getDestinationDirectory());
 
         destinationDirectoryManager.prepare(Credentials.getDestinationDirectory());
+
+//        File selectiveFolder = new File(Credentials.getDestinationDirectory() + "/extractionTest");
+//        selectiveFolder.mkdir();
 
         Folder alfrescoRootFolder = (Folder) session.getObjectByPath("/"); // "/" refers to the root of the Alfresco repository
 
