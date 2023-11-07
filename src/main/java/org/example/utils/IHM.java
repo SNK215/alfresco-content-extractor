@@ -1,9 +1,12 @@
 package org.example.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.example.model.Credentials;
 
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -13,18 +16,26 @@ import java.util.Scanner;
  */
 
 @Log4j2
+@Getter
+@Setter
 public class IHM {
     Credentials credentials = Credentials.getInstance();
+    public static int connectionTryCounter = 3;
+
     public void credentialsRequest () {
-        Scanner sc = new Scanner(System.in);
+        do {
+            Scanner sc = new Scanner(System.in);
 
-        System.out.println("This program needs admin login and password to connect to Alfresco.");
-        System.out.println("Admin login :");
-        credentials.setUser(sc.nextLine());
+            System.out.println("This program needs admin login and password to connect to Alfresco. " + connectionTryCounter + " try left");
+            System.out.println("Admin login :");
+            credentials.setUser(sc.nextLine());
 
-        System.out.println("Admin password :");
-        credentials.setPassword(sc.nextLine());
+            System.out.println("Admin password :");
+            credentials.setPassword(sc.nextLine());
+        }
+        while(credentials.getPassword().isEmpty() || credentials.getUser().isEmpty());
     }
+
     public void startPermission(long extractionSize, double convertExtractionSize, String extractionSizePrefixMultiplier, long availableDiskSpace, double convertAvailableDiskSpace, String availableDiskSpacePrefixMultiplier){
         if (extractionSize >= availableDiskSpace) {
             log.error("Insufficient disk space. Available: " + availableDiskSpace + " bytes(" + convertAvailableDiskSpace + " " + availableDiskSpacePrefixMultiplier + "). Minimum expected: " + extractionSize + " bytes("+ convertExtractionSize + " " + extractionSizePrefixMultiplier +").");
@@ -48,7 +59,9 @@ public class IHM {
 
         String choice = sc.nextLine().toLowerCase();
 
-        if (!choice.equals("y")) {
+        if (choice.length() > 1 && choice.charAt(0) == 'y') {
+            getUserChoice();
+        } else if (!choice.equals("y")) {
             System.exit(0);
         }
     }

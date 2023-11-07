@@ -34,8 +34,12 @@ public class DestinationDirectoryManager {
 
         if (!Files.exists(directoryPath)) {
 
-            directory.mkdirs();
-            log.warn("Destination directory created at " + destinationDirectory);
+            if (directory.mkdirs()) {
+                log.warn("Destination directory created at " + destinationDirectory);
+            } else {
+                log.error("Cannot create destination directory at " + destinationDirectory);
+                log.error("Please change destination directory and try again");
+            }
 
         } else {
 

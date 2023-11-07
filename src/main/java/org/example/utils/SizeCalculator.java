@@ -111,6 +111,11 @@ public class SizeCalculator {
 
         File file = new File(partition);
 
+        if (!file.exists()) {
+            log.error("Selected partition doesn't exist. Please change destination directory and restart the app");
+            System.exit(0);
+        }
+
         return file.getFreeSpace();
     }
 

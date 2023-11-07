@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.example.utils.IHM.connectionTryCounter;
+
 /**
  * Alfresco session generator
  *
@@ -66,6 +68,7 @@ public class SessionGenerator {
             throw new CmisObjectNotFoundException();
         }
         catch (CmisUnauthorizedException e) {
+            connectionTryCounter--;
             log.error("Username or password is incorrect");
             new IHM().credentialsRequest();
         }
