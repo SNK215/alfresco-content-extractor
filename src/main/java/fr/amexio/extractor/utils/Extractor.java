@@ -197,12 +197,6 @@ public class Extractor {
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
 
-        if (object instanceof Document) {
-            Document doc = (Document) object;
-            System.out.println("PROPERTIES DOC");
-            System.out.println(doc.getProperties());
-        }
-
         //Creating a new JSON entry for each property of the CmisObject
         for (Property<?> property : object.getProperties()) {
 
