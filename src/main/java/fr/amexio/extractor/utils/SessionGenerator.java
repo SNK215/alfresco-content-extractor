@@ -1,5 +1,6 @@
-package org.example.utils;
+package fr.amexio.extractor.utils;
 
+import fr.amexio.extractor.model.Credentials;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
@@ -9,16 +10,17 @@ import org.apache.chemistry.opencmis.client.api.SessionFactory;
 import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisConnectionException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
-import org.example.model.Credentials;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.example.utils.IHM.connectionTryCounter;
+import static fr.amexio.extractor.utils.IHM.connectionTryCounter;
 
 /**
  * Alfresco session generator
@@ -42,7 +44,7 @@ public class SessionGenerator {
      * @param credentials (credentials class takes data from extractor_application.properties)
      * @return Alfresco session
      */
-    public Session generate(Credentials credentials) {
+    public Session generate(Credentials credentials) throws IOException {
         try {
             if (session == null) {
                 SessionFactory factory = SessionFactoryImpl.newInstance();
@@ -65,12 +67,16 @@ public class SessionGenerator {
         }
         catch (CmisObjectNotFoundException e) {
             log.error("Incorrect serviceUrl, please change it and restart the app (" + credentials.getServiceUrl() + ")");
-            throw new CmisObjectNotFoundException();
+            new IHM().endProgram();
         }
         catch (CmisUnauthorizedException e) {
             connectionTryCounter--;
             log.error("Username or password is incorrect");
             new IHM().credentialsRequest();
+        }
+        catch(CmisConnectionException e) {
+            log.error("Cannot connect to Alfresco, check if an Alfresco instance us running and try again");
+            new IHM().endProgram();
         }
         return this.session;
     }

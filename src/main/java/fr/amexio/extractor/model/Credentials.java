@@ -1,8 +1,9 @@
-package org.example.model;
+package fr.amexio.extractor.model;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import fr.amexio.extractor.utils.IHM;
 
 import java.io.*;
 import java.util.Properties;
@@ -49,7 +50,7 @@ public class Credentials {
     /**
      *  Data is recovered from extractor_application.properties and stored in an instance of the class
      */
-    public void init() {
+    public void init() throws IOException {
 
         File file  = new File("extractor_application.properties");
 
@@ -66,10 +67,11 @@ public class Credentials {
 
         } catch (FileNotFoundException e) {
             log.error("File " + file.getName() + " not found");
-            System.exit(1);
+            new IHM().endProgram();
         } catch (IOException e) {
             log.error("Error retrieving data, please verify and modify extractor_application.properties");
-            System.exit(1);
+            new IHM().endProgram();
+
         }
     }
 

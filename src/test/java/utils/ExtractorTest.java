@@ -1,6 +1,6 @@
 package utils;
 
-import org.example.utils.Extractor;
+import fr.amexio.extractor.utils.Extractor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

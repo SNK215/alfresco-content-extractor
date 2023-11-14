@@ -8,8 +8,8 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedExceptio
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.example.model.Credentials;
-import org.example.utils.SessionGenerator;
+import fr.amexio.extractor.model.Credentials;
+import fr.amexio.extractor.utils.SessionGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -36,7 +38,7 @@ public class SessionGeneratorTest {
 
     @Test
     @DisplayName("Given correct parameters, when generate session, then returns session")
-    public void givenCorrectParameters_whenGenerate_thenReturnsSession() {
+    public void givenCorrectParameters_whenGenerate_thenReturnsSession() throws IOException {
         //ARRANGE
         when(credentials.getUser()).thenReturn("admin");
         when(credentials.getPassword()).thenReturn("admin");
@@ -99,7 +101,7 @@ public class SessionGeneratorTest {
     @Test
     @DisplayName("Given already existing session, when generate session, then returns session")
     @Disabled
-    public void givenAlreadyExistingSession_whenGenerate_thenReturnsSession() {
+    public void givenAlreadyExistingSession_whenGenerate_thenReturnsSession() throws IOException {
         //ARRANGE
         when(credentials.getUser()).thenReturn("admin");
         when(credentials.getPassword()).thenReturn("admin");

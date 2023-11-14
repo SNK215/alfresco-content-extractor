@@ -3,7 +3,7 @@ package utils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.config.Configurator;
-import org.example.utils.DestinationDirectoryManager;
+import fr.amexio.extractor.utils.DestinationDirectoryManager;
 import org.junit.jupiter.api.*;
 
 import java.io.File;

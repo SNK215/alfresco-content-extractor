@@ -1,12 +1,14 @@
-package org.example.utils;
+package fr.amexio.extractor.utils;
 
+import fr.amexio.extractor.model.Credentials;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
-import org.example.model.Credentials;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Scanner;
-import java.util.regex.Pattern;
 
 /**
  *
@@ -64,5 +66,12 @@ public class IHM {
         } else if (!choice.equals("y")) {
             System.exit(0);
         }
+    }
+
+    public void endProgram() throws IOException {
+        System.out.println("\n\nPress enter to exit...\n\n");
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+        in.readLine();
+        System.exit(1);
     }
 }

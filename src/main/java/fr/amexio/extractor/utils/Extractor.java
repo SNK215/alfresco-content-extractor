@@ -1,4 +1,4 @@
-package org.example.utils;
+package fr.amexio.extractor.utils;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.commons.io.FileUtils;
-import org.example.model.Credentials;
+import fr.amexio.extractor.model.Credentials;
 import org.json.simple.*;
 
 import java.io.*;
@@ -196,6 +196,12 @@ public class Extractor {
 
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
+
+        if (object instanceof Document) {
+            Document doc = (Document) object;
+            System.out.println("PROPERTIES DOC");
+            System.out.println(doc.getProperties());
+        }
 
         //Creating a new JSON entry for each property of the CmisObject
         for (Property<?> property : object.getProperties()) {

@@ -1,4 +1,4 @@
-package org.example.utils;
+package fr.amexio.extractor.utils;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileUtils;

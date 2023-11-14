@@ -1,12 +1,13 @@
-package org.example.utils;
+package fr.amexio.extractor.utils;
 
+import fr.amexio.extractor.model.Credentials;
 import lombok.extern.log4j.Log4j2;
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
-import org.example.model.Credentials;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class SizeCalculator {
      *
      * @see IHM
      */
-    public void getSizesAndPrefixMultipliers() {
+    public void getSizesAndPrefixMultipliers() throws IOException {
         Session session = new SessionGenerator().generate(Credentials.getInstance());
         String rootId = findRootNodeId(session);
 

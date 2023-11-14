@@ -1,7 +1,6 @@
 package utils;
 
-import org.example.utils.IHM;
-import org.junit.jupiter.api.Disabled;
+import fr.amexio.extractor.utils.IHM;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

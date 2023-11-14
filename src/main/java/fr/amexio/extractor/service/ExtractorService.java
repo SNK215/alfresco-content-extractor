@@ -1,11 +1,11 @@
-package org.example.service;
+package fr.amexio.extractor.service;
 
+import fr.amexio.extractor.utils.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.apache.chemistry.opencmis.client.api.Session;
 
-import org.example.model.Credentials;
-import org.example.utils.*;
+import fr.amexio.extractor.model.Credentials;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -2,10 +2,10 @@ package utils;
 
 import org.apache.chemistry.opencmis.client.api.*;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
-import org.example.model.Credentials;
-import org.example.utils.IHM;
-import org.example.utils.SessionGenerator;
-import org.example.utils.SizeCalculator;
+import fr.amexio.extractor.model.Credentials;
+import fr.amexio.extractor.utils.IHM;
+import fr.amexio.extractor.utils.SessionGenerator;
+import fr.amexio.extractor.utils.SizeCalculator;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,10 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -137,7 +137,7 @@ public class SizeCalculatorTest {
 
     @Disabled
     @Test
-    public void testGetSizesAndPrefixMultipliersSuccess() {
+    public void testGetSizesAndPrefixMultipliersSuccess() throws IOException {
         // Créez des mocks pour les dépendances nécessaires
         SessionGenerator sessionGenerator = mock(SessionGenerator.class);
         IHM ihm = mock(IHM.class);
