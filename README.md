@@ -25,7 +25,7 @@ Toute la structure des fichiers et des dossiers sera reproduite à l’identique
 8. Enregistrer le fichier extractor_application.properties
 9. Builder le projet
 10. Dans la console, renseigner le login et le mot de passe utilisés par l'administrateur pour se connecter à Alfresco
-11. La connexion établie, appuyer sur la touche [Y]
+11. La connexion établie, appuyer sur la touche [Y] pour lancer l'extraction
 
 ## Contributeurs
 LANGOWSKI Lucas (https://github.com/SNK215)
